@@ -8,12 +8,21 @@ import sys
 import datetime
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, Qt
 from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QFormLayout, QPushButton, QLineEdit
+from PyQt5.QtWidgets import (
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLabel,
+    QComboBox,
+    QFormLayout,
+    QPushButton,
+    QLineEdit,
+)
 import enum
 
 
 class State(enum.Enum):
-    Ready = 0,
+    Ready = (0,)
     Started = 1
 
 
@@ -25,15 +34,15 @@ class UtilityTestModel(QObject):
         super(QObject, self).__init__()
         self.State = State.Ready
         self.dateFormat = "%d%m%Y_%H%M%S.%f"
-        self.statistics_file = 'utility_test_data.csv'
-        self.languages = ['english', 'italiano']
+        self.statistics_file = "utility_test_data.csv"
+        self.languages = ["english", "italiano"]
         self.selected_language = 0
-        self.titleText = ''
-        self.nextBtnText = ''
-        self.startBtnText = ''
-        self.endingText = ''
-        self.doneButtonText=''
-        self.moduleLink = ''
+        self.titleText = ""
+        self.nextBtnText = ""
+        self.startBtnText = ""
+        self.endingText = ""
+        self.doneButtonText = ""
+        self.moduleLink = ""
         self.questions = []
         self.load_data()
 
@@ -47,22 +56,28 @@ class UtilityTestModel(QObject):
             self.load_data()
 
     def load_data(self):
-        with open(os.path.join('datas', 'utility_test_datas',
-                               'utility_test_{}.json'.format(self.languages[self.selected_language])), 'r') as f:
+        with open(
+            os.path.join(
+                "datas",
+                "utility_test_datas",
+                "utility_test_{}.json".format(self.languages[self.selected_language]),
+            ),
+            "r",
+        ) as f:
             data_dict = json.load(f)
-        self.titleText = data_dict['titleText']
-        self.questions = data_dict['questions']
-        self.startBtnText = data_dict['startBtnText']
-        self.nextBtnText = data_dict['nextBtnText']
-        self.endingText = data_dict['endingText']
-        self.doneButtonText=data_dict['doneButtonText']
-        self.moduleLink =  data_dict['moduleLink']
+        self.titleText = data_dict["titleText"]
+        self.questions = data_dict["questions"]
+        self.startBtnText = data_dict["startBtnText"]
+        self.nextBtnText = data_dict["nextBtnText"]
+        self.endingText = data_dict["endingText"]
+        self.doneButtonText = data_dict["doneButtonText"]
+        self.moduleLink = data_dict["moduleLink"]
         self.languageChanged.emit(self.languages[self.selected_language])
 
     def save_tap(self, id):
         try:
             data = [datetime.datetime.now().strftime(self.dateFormat), id]
-            with open(self.statistics_file, 'a+', newline='') as write_obj:
+            with open(self.statistics_file, "a+", newline="") as write_obj:
                 csv_writer = csv.writer(write_obj)
                 csv_writer.writerow(data)
             return True
@@ -94,7 +109,9 @@ class UtilityTestController(QObject):
 
     def onTestStarted(self):
         self.currentQuestionIndex = 0
-        self.currentQuestionChanged.emit(self.model.questions[self.currentQuestionIndex], self.currentQuestionIndex)
+        self.currentQuestionChanged.emit(
+            self.model.questions[self.currentQuestionIndex], self.currentQuestionIndex
+        )
 
     def requestChangeSelectedLanguage(self, text):
         if text in self.model.languages:
@@ -108,7 +125,10 @@ class UtilityTestController(QObject):
         self.model.save_tap(index)
         self.currentQuestionIndex += 1
         if self.currentQuestionIndex < len(self.model.questions):
-            self.currentQuestionChanged.emit(self.model.questions[self.currentQuestionIndex], self.currentQuestionIndex)
+            self.currentQuestionChanged.emit(
+                self.model.questions[self.currentQuestionIndex],
+                self.currentQuestionIndex,
+            )
         else:
             self.testEnded.emit()
 
@@ -155,7 +175,9 @@ class UtilityTestUi(QWidget):
         self.model.testStarted.connect(self.onTestStarted)
         self.controller.currentQuestionChanged.connect(self.onNewQuestionArrived)
         self.controller.testEnded.connect(self.onTestEnded)
-        self.cBoxLanguage.currentTextChanged.connect(self.controller.requestChangeSelectedLanguage)
+        self.cBoxLanguage.currentTextChanged.connect(
+            self.controller.requestChangeSelectedLanguage
+        )
         self.btnStart.clicked.connect(self.controller.requestStartTest)
 
     def onLanguageChanged(self, new_language):
@@ -199,7 +221,7 @@ class UtilityTestUi(QWidget):
         self.layQuestions.addWidget(self.boxLink)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     MainWindow.setWindowTitle("Usability test")

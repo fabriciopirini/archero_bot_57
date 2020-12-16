@@ -25,8 +25,14 @@ class PlayState(enum.Enum):
 
 
 class QLevelState(QWidget):
-    def __init__(self, model: GameControllerModel, controller: GameControllerController, level_num: int,
-                 level_name: str, parent=QWidget):
+    def __init__(
+        self,
+        model: GameControllerModel,
+        controller: GameControllerController,
+        level_num: int,
+        level_name: str,
+        parent=QWidget,
+    ):
         super(QWidget, self).__init__()
         self.model = model
         self.controler = controller
@@ -77,7 +83,10 @@ class QLevelState(QWidget):
         if state == self.state:
             return
         reset = False
-        if self.state in [PlayState.Played, PlayState.Playing] and state in [PlayState.ToBePlayed, PlayState.Playing]:
+        if self.state in [PlayState.Played, PlayState.Playing] and state in [
+            PlayState.ToBePlayed,
+            PlayState.Playing,
+        ]:
             reset = True
         self.state = state
         self.updateStateColor()
@@ -102,10 +111,17 @@ class QLevelState(QWidget):
         elif self.state == PlayState.ToBePlayed:
             bgcolor = self.color_not_played
             fgcolor = self.fgplayed
-        self.logs.setStyleSheet("color: rgb({}, {}, {})".format(fgcolor[0], fgcolor[1], fgcolor[2]))
-        self.lblScreenChecks.setStyleSheet("color: rgb({}, {}, {})".format(fgcolor[0], fgcolor[1], fgcolor[2]))
+        self.logs.setStyleSheet(
+            "color: rgb({}, {}, {})".format(fgcolor[0], fgcolor[1], fgcolor[2])
+        )
+        self.lblScreenChecks.setStyleSheet(
+            "color: rgb({}, {}, {})".format(fgcolor[0], fgcolor[1], fgcolor[2])
+        )
         self.setStyleSheet(
-            "background-color: rgb({}, {}, {}); border-radius: 5px;".format(bgcolor[0], bgcolor[1], bgcolor[2]))
+            "background-color: rgb({}, {}, {}); border-radius: 5px;".format(
+                bgcolor[0], bgcolor[1], bgcolor[2]
+            )
+        )
 
     def color_from_level(self, level_name: str):
         if level_name not in self.levels_colors:

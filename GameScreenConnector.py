@@ -1,6 +1,11 @@
 from UsbConnector import UsbConnector
 import os
-from Utils import loadJsonData, saveJsonData_oneIndent, saveJsonData_twoIndent, buildDataFolder
+from Utils import (
+    loadJsonData,
+    saveJsonData_oneIndent,
+    saveJsonData_twoIndent,
+    buildDataFolder,
+)
 
 
 class GameScreenConnector:
@@ -10,9 +15,9 @@ class GameScreenConnector:
         self.width = 0
         self.height = 0
         # This should be in format rgba
-        self.coords_path = ''
-        self.specific_checks_path = ''
-        self.hor_lines_path = ''
+        self.coords_path = ""
+        self.specific_checks_path = ""
+        self.hor_lines_path = ""
         self.specific_checks_coords = {}
         self.static_coords = {}
         self.door_width = 180.0 / 1080.0
@@ -29,12 +34,24 @@ class GameScreenConnector:
 
     def changeScreenSize(self, w, h):
         self.width, self.height = w, h
-        self.coords_path = os.path.join("datas", buildDataFolder(self.width, self.height), "coords",
-                                        "static_coords.json")
-        self.specific_checks_path = os.path.join("datas", buildDataFolder(self.width, self.height), "coords",
-                                                 "static_specific_coords.json")
-        self.hor_lines_path = os.path.join("datas", buildDataFolder(self.width, self.height), "coords",
-                                           "hor_lines.json")
+        self.coords_path = os.path.join(
+            "datas",
+            buildDataFolder(self.width, self.height),
+            "coords",
+            "static_coords.json",
+        )
+        self.specific_checks_path = os.path.join(
+            "datas",
+            buildDataFolder(self.width, self.height),
+            "coords",
+            "static_specific_coords.json",
+        )
+        self.hor_lines_path = os.path.join(
+            "datas",
+            buildDataFolder(self.width, self.height),
+            "coords",
+            "hor_lines.json",
+        )
 
         self.specific_checks_coords = loadJsonData(self.specific_checks_path)
         self.static_coords = loadJsonData(self.coords_path)
@@ -47,9 +64,11 @@ class GameScreenConnector:
         elif isinstance(around, list):
             arr = [around[0], around[1], around[2]]
         # checking only RGB from RGBA
-        return px_expected[0] - arr[0] <= px_readed[0] <= px_expected[0] + arr[0] \
-               and px_expected[1] - arr[1] <= px_readed[1] <= px_expected[1] + arr[1] \
-               and px_expected[2] - arr[2] <= px_readed[2] <= px_expected[2] + arr[2]
+        return (
+            px_expected[0] - arr[0] <= px_readed[0] <= px_expected[0] + arr[0]
+            and px_expected[1] - arr[1] <= px_readed[1] <= px_expected[1] + arr[1]
+            and px_expected[2] - arr[2] <= px_readed[2] <= px_expected[2] + arr[2]
+        )
 
     def getFrameAttr(self, frame, attributes):
         attr_data = []
@@ -71,18 +90,34 @@ class GameScreenConnector:
         if len(points_list) != len(points_value):
             print("Wrong size between points and values!")
             return False
-        if self.debug: print("-----------------------------------")
-        if self.debug: print("|   Smartphone   |     Values     |")
+        if self.debug:
+            print("-----------------------------------")
+        if self.debug:
+            print("|   Smartphone   |     Values     |")
         attr_data = self.getFrameAttr(frame, points_list)
         equal = True
         for i in range(len(attr_data)):
-            if self.debug: print("| %4d %4d %4d | %4d %4d %4d |" % (
-                attr_data[i][0], attr_data[i][1], attr_data[i][2], points_value[i][0], points_value[i][1],
-                points_value[i][2]))
+            if self.debug:
+                print(
+                    "| %4d %4d %4d | %4d %4d %4d |"
+                    % (
+                        attr_data[i][0],
+                        attr_data[i][1],
+                        attr_data[i][2],
+                        points_value[i][0],
+                        points_value[i][1],
+                        points_value[i][2],
+                    )
+                )
             if not self.pixel_equals(attr_data[i], points_value[i], around=around):
                 equal = False
-        if self.debug: print("|-->         %s" % ("  equal           <--|" if equal else "not equal         <--|"))
-        if self.debug: print("-----------------------------------")
+        if self.debug:
+            print(
+                "|-->         %s"
+                % ("  equal           <--|" if equal else "not equal         <--|")
+            )
+        if self.debug:
+            print("-----------------------------------")
         return equal
 
     def checkDoorsOpen(self, frame=None):
@@ -90,11 +125,17 @@ class GameScreenConnector:
             frame = self.getFrame()
         # Add opened doors check
         px_up = 50
-        h_bar = self.hor_lines['hor_hp_bar'][1]  # HP bar height
+        h_bar = self.hor_lines["hor_hp_bar"][1]  # HP bar height
         for i in range(1, 4, 1):
             line = self._getHorLine(
-                [480 / 1080.0, h_bar - ((px_up * i) / self.height), 600 / 1080.0, h_bar - ((px_up * i) / self.height)],
-                frame)
+                [
+                    480 / 1080.0,
+                    h_bar - ((px_up * i) / self.height),
+                    600 / 1080.0,
+                    h_bar - ((px_up * i) / self.height),
+                ],
+                frame,
+            )
             white = True
             for px in line:
                 if px[0] != 255 or px[1] != 255 or px[2] != 255:
@@ -116,14 +157,26 @@ class GameScreenConnector:
         elif coords_name in self.specific_checks_coords.keys():
             dict_to_take = self.specific_checks_coords
         else:
-            print("No coordinates called %s is saved in memory! Returning false." % coords_name)
+            print(
+                "No coordinates called %s is saved in memory! Returning false."
+                % coords_name
+            )
             return False
-        if self.debug: print("Checking %s" % (coords_name))
+        if self.debug:
+            print("Checking %s" % (coords_name))
         if frame is None:
             frame = self.getFrame()
-        around = 2 if "around" not in dict_to_take[coords_name].keys() else dict_to_take[coords_name]["around"]
-        is_equal = self._check_screen_points_equal(frame, dict_to_take[coords_name]["coordinates"],
-                                                   dict_to_take[coords_name]["values"], around=around)
+        around = (
+            2
+            if "around" not in dict_to_take[coords_name].keys()
+            else dict_to_take[coords_name]["around"]
+        )
+        is_equal = self._check_screen_points_equal(
+            frame,
+            dict_to_take[coords_name]["coordinates"],
+            dict_to_take[coords_name]["values"],
+            around=around,
+        )
         return is_equal
 
     def getFrame(self):
@@ -141,9 +194,16 @@ class GameScreenConnector:
         if frame is None:
             frame = self.getFrame()
         for k, v in self.static_coords.items():
-            around = 2 if "around" not in self.static_coords[k].keys() else self.static_coords[k]["around"]
-            if self.debug: print("Checking %s, around = %d" % (k, around))
-            result[k] = self._check_screen_points_equal(frame, v["coordinates"], v["values"], around=around)
+            around = (
+                2
+                if "around" not in self.static_coords[k].keys()
+                else self.static_coords[k]["around"]
+            )
+            if self.debug:
+                print("Checking %s, around = %d" % (k, around))
+            result[k] = self._check_screen_points_equal(
+                frame, v["coordinates"], v["values"], around=around
+            )
         return result
 
     def getFrameState(self, frame=None) -> str:
@@ -156,9 +216,16 @@ class GameScreenConnector:
         if frame is None:
             frame = self.getFrame()
         for k, v in self.static_coords.items():
-            around = 2 if "around" not in self.static_coords[k].keys() else self.static_coords[k]["around"]
-            if self.debug: print("Checking %s, around = %d" % (k, around))
-            if self._check_screen_points_equal(frame, v["coordinates"], v["values"], around=around):
+            around = (
+                2
+                if "around" not in self.static_coords[k].keys()
+                else self.static_coords[k]["around"]
+            )
+            if self.debug:
+                print("Checking %s, around = %d" % (k, around))
+            if self._check_screen_points_equal(
+                frame, v["coordinates"], v["values"], around=around
+            ):
                 state = k
                 break
         return state
@@ -170,13 +237,17 @@ class GameScreenConnector:
         :param frame:
         :return:
         """
-        x1, y1, x2, y2 = hor_line[0] * self.width, hor_line[1] * self.height, hor_line[2] * self.width, hor_line[
-            3] * self.height
+        x1, y1, x2, y2 = (
+            hor_line[0] * self.width,
+            hor_line[1] * self.height,
+            hor_line[2] * self.width,
+            hor_line[3] * self.height,
+        )
         if frame is None:
             frame = self.getFrame()
         start = int(y1 * self.width + x1)
         size = int(x2 - x1)
-        line = frame[start:start + size]
+        line = frame[start : start + size]
         return line
 
     def getLineExpBar(self, frame=None):
@@ -196,7 +267,7 @@ class GameScreenConnector:
 
     def filterRawHpLine_window(self, line):
         """
-            Given a horizontal array of pixels RGBA, filter data in order to obtain position of character based on his HP.
+        Given a horizontal array of pixels RGBA, filter data in order to obtain position of character based on his HP.
         """
         # Filter outlayers:
         first_filter = self.removeOutlayersInLine(line, self.green_hp)
@@ -204,7 +275,7 @@ class GameScreenConnector:
 
     def filterRawHpLine_convolution(self, line):
         """
-            Given a horizontal array of pixels RGBA, convolve pixel in order to get clean location of player
+        Given a horizontal array of pixels RGBA, convolve pixel in order to get clean location of player
         """
         # TODO: finish this or use filterRawHpLine_window
         return line
@@ -216,8 +287,9 @@ class GameScreenConnector:
             i += 1
             if i == 452:
                 a = 0
-            if self.pixel_equals(px, self.green_hp, [8, 12, 8]) or self.pixel_equals(px, self.green_hp_high,
-                                                                                     [8, 12, 8]):
+            if self.pixel_equals(px, self.green_hp, [8, 12, 8]) or self.pixel_equals(
+                px, self.green_hp_high, [8, 12, 8]
+            ):
                 masked_green.append(self.green_hp)
             else:
                 masked_green.append([0, 0, 0, 0])
@@ -292,7 +364,9 @@ class GameScreenConnector:
                 for j in range(window_width):
                     sum += 1 if masked_green[i - j][0] == high_pixel_color[0] else 0
                 for j in range(window_width):
-                    line[i - j] = [0, 0, 0, 0] if sum < min_greens_pixels else high_pixel_color
+                    line[i - j] = (
+                        [0, 0, 0, 0] if sum < min_greens_pixels else high_pixel_color
+                    )
                 i += window_width - 1  # Skip() and go to next window
             i += 1
         for i in range(window_width):  # Last 4 take black. no problem losing them
@@ -307,7 +381,9 @@ class GameScreenConnector:
         :return:
         """
         if line_name not in self.hor_lines:
-            print("Given line name '%s' is not a known horizontal line name." % line_name)
+            print(
+                "Given line name '%s' is not a known horizontal line name." % line_name
+            )
             return []
         return self._getHorLine(self.hor_lines[line_name], frame)
 
@@ -318,7 +394,9 @@ class GameScreenConnector:
             current_exp_bar = current_exp_bar[:min_len]
         changed = False
         for i in range(len(old_line_hor_bar)):
-            if not self.pixel_equals(old_line_hor_bar[i], current_exp_bar[i], around=around):
+            if not self.pixel_equals(
+                old_line_hor_bar[i], current_exp_bar[i], around=around
+            ):
                 changed = True
                 break
         return changed
@@ -330,7 +408,8 @@ class GameScreenConnector:
         :param frame:
         :return:
         """
-        if self.debug: print("Checking LineExpBar has changed")
+        if self.debug:
+            print("Checking LineExpBar has changed")
         new_line = self.getLineExpBar(frame)
         return self._checkBarHasChanged(old_line_hor_bar, new_line, around=2)
 
@@ -341,6 +420,7 @@ class GameScreenConnector:
         :param frame:
         :return:
         """
-        if self.debug: print("Checking LineUpper has changed")
+        if self.debug:
+            print("Checking LineUpper has changed")
         new_line = self.getHorLine("hor_up_line", frame)
         return self._checkBarHasChanged(old_line, new_line, around=10)

@@ -1,8 +1,18 @@
 from functools import partial
 
 from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtWidgets import QHBoxLayout, QBoxLayout, QVBoxLayout, QPushButton, QWidget, QScrollArea, QLabel, \
-    QFormLayout, QGridLayout, QGroupBox
+from PyQt5.QtWidgets import (
+    QHBoxLayout,
+    QBoxLayout,
+    QVBoxLayout,
+    QPushButton,
+    QWidget,
+    QScrollArea,
+    QLabel,
+    QFormLayout,
+    QGridLayout,
+    QGroupBox,
+)
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt, QSize, pyqtSignal
 from PyQt5 import QtWidgets, uic
@@ -14,7 +24,12 @@ from TouchManager.TouchManagerModel import TouchManagerModel
 class SwipableListWidget(QWidget):
     onElementClicked = pyqtSignal(str)
 
-    def __init__(self, parent: QWidget, controller: TouchManagerController, model: TouchManagerModel):
+    def __init__(
+        self,
+        parent: QWidget,
+        controller: TouchManagerController,
+        model: TouchManagerModel,
+    ):
         super(QWidget, self).__init__()
         self.model = model
         self.controller = controller
@@ -30,16 +45,16 @@ class SwipableListWidget(QWidget):
     def setupUI(self):
         self.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.main_layout)
-        self.main_layout.setContentsMargins(0,0,0,0)
+        self.main_layout.setContentsMargins(0, 0, 0, 0)
         self.widget.setLayout(self.verticalLayout)
-        self.widget.setContentsMargins(0,0,0,0)
+        self.widget.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.scroller.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.scroller.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.scroller.setWidgetResizable(True)
         self.scroller.setWidget(self.widget)
-        self.scroller.setContentsMargins(0,0,0,0)
+        self.scroller.setContentsMargins(0, 0, 0, 0)
         self.main_layout.addWidget(self.scroller)
 
     def addElement(self, button_name):
@@ -55,10 +70,13 @@ class SwipableListWidget(QWidget):
     def onSelectionChanged(self, btn_name):
         if self.lastElementSelected != "":
             self.elementsDict[self.lastElementSelected].setStyleSheet(
-                "QPushButton { background-color : (225,225,225); }")
+                "QPushButton { background-color : (225,225,225); }"
+            )
         self.elementsDict[btn_name].setStyleSheet(
-            "background-color: rgb({}, {}, {})".format(self.model.ui_color[0], self.model.ui_color[1],
-                                                       self.model.ui_color[2]))
+            "background-color: rgb({}, {}, {})".format(
+                self.model.ui_color[0], self.model.ui_color[1], self.model.ui_color[2]
+            )
+        )
         self.lastElementSelected = btn_name
 
     def onDictChanged(self, new_source: dict):

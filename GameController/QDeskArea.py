@@ -1,8 +1,17 @@
 import math
 
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QHBoxLayout, QBoxLayout, QVBoxLayout, QPushButton, QWidget, QScrollArea, QLabel, \
-    QFormLayout, QGridLayout
+from PyQt5.QtWidgets import (
+    QHBoxLayout,
+    QBoxLayout,
+    QVBoxLayout,
+    QPushButton,
+    QWidget,
+    QScrollArea,
+    QLabel,
+    QFormLayout,
+    QGridLayout,
+)
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt, QSize
 from PyQt5 import QtWidgets, uic
@@ -10,14 +19,24 @@ from QMyWidgets.QLevelState import QLevelState, PlayState
 from GameController.GameControllerController import GameControllerController
 from GameController.GameControllerModel import GameControllerModel
 
+
 class QDeskArea(QWidget):
-    def __init__(self, parent: QWidget, controller: GameControllerController, model: GameControllerModel):
+    def __init__(
+        self,
+        parent: QWidget,
+        controller: GameControllerController,
+        model: GameControllerModel,
+    ):
         super(QWidget, self).__init__()
         self.model = model
         self.controller = controller
-        self.scroll = QScrollArea()  # Scroll Area which contains the widgets, set as the centralWidget
+        self.scroll = (
+            QScrollArea()
+        )  # Scroll Area which contains the widgets, set as the centralWidget
         self.widget = QWidget()  # Widget that contains the collection of Vertical Box
-        self.box = QHBoxLayout()  # The H Box that contains the V Boxes of  labels and buttons
+        self.box = (
+            QHBoxLayout()
+        )  # The H Box that contains the V Boxes of  labels and buttons
         self.main_layout = QHBoxLayout()
         self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
         self.setStyleSheet("background-color: rgb(43, 43, 43)")
@@ -46,7 +65,9 @@ class QDeskArea(QWidget):
         button = QPushButton(self)
         button.setFixedSize(26, 26)
         button.setText("+")
-        button.setStyleSheet("background-color: (225,225,225); border-radius: 13px;text-align: center")
+        button.setStyleSheet(
+            "background-color: (225,225,225); border-radius: 13px;text-align: center"
+        )
         return button
 
     def resetCurrentDungeon(self):
@@ -65,7 +86,7 @@ class QDeskArea(QWidget):
             v_layouts.append(lay)
             self.box.addLayout(lay)
         for i, v in level_names.items():
-            object = QLevelState(self.model,self.controller,i,v)
+            object = QLevelState(self.model, self.controller, i, v)
             object.setFixedSize(150, 300)
             if i == self.model.engine.currentLevel:
                 object.SetState(PlayState.Playing)

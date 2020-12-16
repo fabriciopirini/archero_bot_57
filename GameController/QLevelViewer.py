@@ -2,13 +2,15 @@ from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import QFrame, QLabel, QVBoxLayout, QHBoxLayout, QWidget
 from PyQt5 import QtCore, QtGui, QtWidgets
-from GameController.GameControllerModel import GameControllerModel,EngineState
+from GameController.GameControllerModel import GameControllerModel, EngineState
 
 
 class QLevelViewer(QWidget):
     onLevelClicked = pyqtSignal()
 
-    def __init__(self, model: GameControllerModel, level_num=0, level_name=None, parent=QWidget):
+    def __init__(
+        self, model: GameControllerModel, level_num=0, level_name=None, parent=QWidget
+    ):
         super(QWidget, self).__init__()
         self.model = model
         self.lblNumber = QLabel()
@@ -38,8 +40,10 @@ class QLevelViewer(QWidget):
     def _changeLevelColor(self):
         level_color = self._getColorByLevel(self.level_name)
         self.frame.setStyleSheet(
-            "background-color: rgb({}, {}, {}); border-radius: 5px;".format(level_color[0], level_color[1],
-                                                                            level_color[2]))
+            "background-color: rgb({}, {}, {}); border-radius: 5px;".format(
+                level_color[0], level_color[1], level_color[2]
+            )
+        )
 
     def changeLevel(self, newlevel: int, level_name=None):
         self.level_num = newlevel
@@ -101,4 +105,6 @@ class QLevelViewer(QWidget):
         self.model.engineStatechanged.connect(self.onPlayStateChanged)
 
     def onPlayStateChanged(self, newState: EngineState):
-        self.updateClickableUi(self.isClickable and (not newState == EngineState.Playing))
+        self.updateClickableUi(
+            self.isClickable and (not newState == EngineState.Playing)
+        )

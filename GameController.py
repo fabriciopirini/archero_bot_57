@@ -5,6 +5,13 @@ from GameController.GameControllerController import GameControllerController
 
 if __name__ == "__main__":
     import sys
+    import logging
+
+    logging.basicConfig(
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        level=logging.INFO,
+        datefmt="%H:%M:%S",
+    )
 
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()

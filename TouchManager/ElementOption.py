@@ -1,8 +1,18 @@
 from functools import partial
 
 from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtWidgets import QHBoxLayout, QBoxLayout, QVBoxLayout, QPushButton, QWidget, QScrollArea, QLabel, \
-    QFormLayout, QGridLayout, QGroupBox
+from PyQt5.QtWidgets import (
+    QHBoxLayout,
+    QBoxLayout,
+    QVBoxLayout,
+    QPushButton,
+    QWidget,
+    QScrollArea,
+    QLabel,
+    QFormLayout,
+    QGridLayout,
+    QGroupBox,
+)
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt, QSize, pyqtSignal
 from PyQt5 import QtWidgets, uic
@@ -16,7 +26,12 @@ from TouchManager.FrameCheckOption import FrameCheckOption
 
 
 class ElementOption(QWidget):
-    def __init__(self, parent: QWidget, controller: TouchManagerController, model: TouchManagerModel):
+    def __init__(
+        self,
+        parent: QWidget,
+        controller: TouchManagerController,
+        model: TouchManagerModel,
+    ):
         super(QWidget, self).__init__()
         self.model = model
         self.controller = controller

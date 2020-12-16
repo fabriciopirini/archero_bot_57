@@ -1,8 +1,17 @@
 from functools import partial
 
 from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtWidgets import QHBoxLayout, QBoxLayout, QVBoxLayout, QPushButton, QWidget, QScrollArea, QLabel, \
-    QFormLayout, QGridLayout
+from PyQt5.QtWidgets import (
+    QHBoxLayout,
+    QBoxLayout,
+    QVBoxLayout,
+    QPushButton,
+    QWidget,
+    QScrollArea,
+    QLabel,
+    QFormLayout,
+    QGridLayout,
+)
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt, QSize, pyqtSignal
 from PyQt5 import QtWidgets, uic
@@ -13,8 +22,12 @@ from TouchManager.TouchManagerController import ShowAreaState
 
 
 class CoordinatesSelector(QWidget):
-
-    def __init__(self, parent: QWidget, controller: TouchManagerController, model: TouchManagerModel):
+    def __init__(
+        self,
+        parent: QWidget,
+        controller: TouchManagerController,
+        model: TouchManagerModel,
+    ):
         super(QWidget, self).__init__()
         self.model = model
         self.controller = controller
@@ -46,16 +59,31 @@ class CoordinatesSelector(QWidget):
     def initSignals(self):
         self.controller.onCurrentShowAreaChanged.connect(self.onAreaStatechanged)
         self.btn_buttons.clicked.connect(
-            partial(self.controller.showDifferentElemStateRequested, ShowAreaState.Buttons))
+            partial(
+                self.controller.showDifferentElemStateRequested, ShowAreaState.Buttons
+            )
+        )
         self.btn_movements.clicked.connect(
-            partial(self.controller.showDifferentElemStateRequested, ShowAreaState.Movements))
+            partial(
+                self.controller.showDifferentElemStateRequested, ShowAreaState.Movements
+            )
+        )
         self.btn_checkpoints.clicked.connect(
-            partial(self.controller.showDifferentElemStateRequested, ShowAreaState.FrameCheck))
+            partial(
+                self.controller.showDifferentElemStateRequested,
+                ShowAreaState.FrameCheck,
+            )
+        )
 
     def _setButtonSelection(self, btn, selected: bool):
         if selected:
-            btn.setStyleSheet("background-color: rgb({}, {}, {})".format(self.model.ui_color[0], self.model.ui_color[1],
-                                                                         self.model.ui_color[2]))
+            btn.setStyleSheet(
+                "background-color: rgb({}, {}, {})".format(
+                    self.model.ui_color[0],
+                    self.model.ui_color[1],
+                    self.model.ui_color[2],
+                )
+            )
         else:
             btn.setStyleSheet("QPushButton { background-color : (225,225,225); }")
 

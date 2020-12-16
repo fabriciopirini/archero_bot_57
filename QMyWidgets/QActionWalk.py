@@ -23,7 +23,7 @@ class QActionWalk(QWidget):
 
     def setupUi(self):
         self.setLayout(self.lay)
-        #self.lay.setSpacing(0)
+        # self.lay.setSpacing(0)
         self.lay.setContentsMargins(5, 0, 5, 0)
         self.lay.setAlignment(QtCore.Qt.AlignCenter)
         self.setFixedSize(100, 100)
@@ -55,13 +55,11 @@ class QActionWalk(QWidget):
         self.lblInfoDirection_2.setObjectName("lblInfoDirection_2")
         self.lblInfoDirection_2.setText("T:")
 
-
-        #wid = QWidget()
-        #v_lay = QVBoxLayout()
-        #v_lay.setSpacing(0)
-        #v_lay.setContentsMargins(0, 0, 0, 0)
-        #wid.setLayout(v_lay)
-
+        # wid = QWidget()
+        # v_lay = QVBoxLayout()
+        # v_lay.setSpacing(0)
+        # v_lay.setContentsMargins(0, 0, 0, 0)
+        # wid.setLayout(v_lay)
 
         hor1 = QHBoxLayout()
         hor1.addWidget(self.lblInfoDirection)
@@ -77,7 +75,6 @@ class QActionWalk(QWidget):
         hor2.setContentsMargins(0, 0, 0, 0)
         self.lay.addLayout(hor2)
 
-        #self.lay.addWidget(wid)
-
+        # self.lay.addWidget(wid)
 
         QtCore.QMetaObject.connectSlotsByName(self)

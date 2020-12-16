@@ -29,28 +29,34 @@ class GameControllerModel(QObject):
         super(QObject, self).__init__()
         # Default data
         self.engine = CaveEngine()
-        self.engine.device_connector.setFunctionToCallOnConnectionStateChanged(self.onDevConnChanged)
-        self.engine.device_connector.setFunctionToCallOnCheckingConnectionStateChanged(self.onDevCheckConnectionChanged)
-        self.dict_buttons = 'data.py'
+        self.engine.device_connector.setFunctionToCallOnConnectionStateChanged(
+            self.onDevConnChanged
+        )
+        self.engine.device_connector.setFunctionToCallOnCheckingConnectionStateChanged(
+            self.onDevCheckConnectionChanged
+        )
+        self.dict_buttons = "data.py"
         self.ch_images_path = "ui_chapters/"
         self.ch_image_ext = ".png"
         self.icon_path = "icons"
         self.icons_dataset = self.load_icons()
         self.currentEngineState: EngineState = EngineState.Ready
-        self.chapters = ["1. Verdant Prairie",
-                         "2. Storm Desert",
-                         "3. Abandoned Dungeon",
-                         "4. Crystal Mines",
-                         "5. Lost Castle",
-                         "6. Cave of Bones",
-                         "7. Barens of Shadow",
-                         "8. Silent Expanse",
-                         "9. Frozen Pinnacle",
-                         "10. Land of Doom",
-                         "11. The Capital",
-                         "12. Dungeon of Traps",
-                         "13. Lava Land",
-                         "14. Eskimo Lands"]
+        self.chapters = [
+            "1. Verdant Prairie",
+            "2. Storm Desert",
+            "3. Abandoned Dungeon",
+            "4. Crystal Mines",
+            "5. Lost Castle",
+            "6. Cave of Bones",
+            "7. Barens of Shadow",
+            "8. Silent Expanse",
+            "9. Frozen Pinnacle",
+            "10. Land of Doom",
+            "11. The Capital",
+            "12. Dungeon of Traps",
+            "13. Lava Land",
+            "14. Eskimo Lands",
+        ]
         self.allowed_chapters = [3, 6, 10]
         self.workerThread: WorkerThread = None
 
@@ -82,18 +88,20 @@ class GameControllerModel(QObject):
 
     def load_icons(self):
         icons_dts = {}
-        icons_dts['prev'] = "Start.png"
-        icons_dts['play'] = "Play.png"
-        icons_dts['pause'] = "Pause.png"
-        icons_dts['next'] = "End.png"
-        icons_dts['stop'] = "Stop.png"
+        icons_dts["prev"] = "Start.png"
+        icons_dts["play"] = "Play.png"
+        icons_dts["pause"] = "Pause.png"
+        icons_dts["next"] = "End.png"
+        icons_dts["stop"] = "Stop.png"
         return icons_dts
 
     def getChapters(self) -> list:
         return self.chapters
 
     def getChapterImagePath(self, ch_number: int) -> str:
-        return os.path.join(self.ch_images_path, "ch" + str(ch_number) + self.ch_image_ext)
+        return os.path.join(
+            self.ch_images_path, "ch" + str(ch_number) + self.ch_image_ext
+        )
 
     def getChNumberFromString(self, ch_str) -> int:
         for i, ch in enumerate(self.chapters):

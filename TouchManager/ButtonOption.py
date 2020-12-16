@@ -1,6 +1,16 @@
 from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtWidgets import QHBoxLayout, QBoxLayout, QVBoxLayout, QPushButton, QWidget, QScrollArea, QLabel, \
-    QFormLayout, QGridLayout, QRadioButton
+from PyQt5.QtWidgets import (
+    QHBoxLayout,
+    QBoxLayout,
+    QVBoxLayout,
+    QPushButton,
+    QWidget,
+    QScrollArea,
+    QLabel,
+    QFormLayout,
+    QGridLayout,
+    QRadioButton,
+)
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt, QSize, pyqtSignal, QObject
 from PyQt5 import QtWidgets, uic
@@ -10,7 +20,12 @@ from TouchManager.TouchManagerModel import TouchManagerModel
 
 
 class ButtonOption(QWidget):
-    def __init__(self, parent: QObject, controller: TouchManagerController, model: TouchManagerModel):
+    def __init__(
+        self,
+        parent: QObject,
+        controller: TouchManagerController,
+        model: TouchManagerModel,
+    ):
         super(QWidget, self).__init__()
         self.parent = parent
         self.model = model
@@ -36,6 +51,9 @@ class ButtonOption(QWidget):
 
     def changeData(self, new_data):
         d = new_data[0]
-        x, y = d[0] * self.controller.current_image_size[0], d[1] * self.controller.current_image_size[1]
+        x, y = (
+            d[0] * self.controller.current_image_size[0],
+            d[1] * self.controller.current_image_size[1],
+        )
         self.lblX.setText("Location: %4d, %4d" % (x, y))
         # self.lblY.setText("Y: %4d" % y)

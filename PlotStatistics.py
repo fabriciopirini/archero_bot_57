@@ -34,7 +34,7 @@ def plot_winningGames(datas):
     _min = duration2msstring(min(y))
     _max = duration2msstring(max(y))
     title = "Winned games: %d. Avg: %s, Max: %s, Min: %s" % (len(y), _avg, _max, _min)
-    plot_bar_x(x, y, title, 'Date', 'Duration (minutes)')
+    plot_bar_x(x, y, title, "Date", "Duration (minutes)")
 
 
 def plot_allGames(datas):
@@ -46,17 +46,22 @@ def plot_allGames(datas):
     _avg = "%d" % (sum(y) / len(y))
     _min = "%d" % min(y)
     _max = "%d" % max(y)
-    title = "Level reached for all games: %d. Avg: %s, Max: %s, Min: %s" % (len(y), _avg, _max, _min)
-    plot_bar_x(x, y, title, 'Date', 'Level arrived (number)')
+    title = "Level reached for all games: %d. Avg: %s, Max: %s, Min: %s" % (
+        len(y),
+        _avg,
+        _max,
+        _min,
+    )
+    plot_bar_x(x, y, title, "Date", "Level arrived (number)")
 
 
 def main():
     manager = StatisticsManager()
-    plt.figure('Bot played games statistics')
+    plt.figure("Bot played games statistics")
     datas = manager._readAll()
     plot_winningGames(datas)
     plot_allGames(datas)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

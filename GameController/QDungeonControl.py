@@ -1,6 +1,15 @@
 from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtWidgets import QHBoxLayout, QBoxLayout, QVBoxLayout, QPushButton, QWidget, QScrollArea, QLabel, \
-    QFormLayout, QGridLayout
+from PyQt5.QtWidgets import (
+    QHBoxLayout,
+    QBoxLayout,
+    QVBoxLayout,
+    QPushButton,
+    QWidget,
+    QScrollArea,
+    QLabel,
+    QFormLayout,
+    QGridLayout,
+)
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt, QSize, pyqtSignal
 from PyQt5 import QtWidgets, uic
@@ -11,8 +20,12 @@ from QMyWidgets.QDarkButton import QDarkButton
 
 
 class QDungeonController(QWidget):
-
-    def __init__(self, parent: QWidget, controller: GameControllerController, model: GameControllerModel):
+    def __init__(
+        self,
+        parent: QWidget,
+        controller: GameControllerController,
+        model: GameControllerModel,
+    ):
         super(QWidget, self).__init__()
         self.model = model
         self.controller = controller
@@ -38,11 +51,11 @@ class QDungeonController(QWidget):
     def initUI(self):
         lay = QHBoxLayout()
         lay.setAlignment(Qt.AlignCenter)
-        self.initButton(self.btn_prev, icon_name='prev')
-        self.initButton(self.btn_play, icon_name='play')
-        self.initButton(self.btn_pause, icon_name='pause')
-        self.initButton(self.btn_next, icon_name='next')
-        self.initButton(self.btn_stop, icon_name='stop')
+        self.initButton(self.btn_prev, icon_name="prev")
+        self.initButton(self.btn_play, icon_name="play")
+        self.initButton(self.btn_pause, icon_name="pause")
+        self.initButton(self.btn_next, icon_name="next")
+        self.initButton(self.btn_stop, icon_name="stop")
         self.btn_pause.changeEnableState(False)
         lay.addWidget(self.btn_prev)
         lay.addWidget(self.btn_play)
@@ -62,15 +75,15 @@ class QDungeonController(QWidget):
 
     def changeButtonsState(self, buttons: dict):
         for name, enabled in buttons.items():
-            if name == 'play':
+            if name == "play":
                 self.btn_play.changeEnableState(enabled)
-            elif name == 'pause':
+            elif name == "pause":
                 self.btn_pause.changeEnableState(enabled)
-            elif name == 'next':
+            elif name == "next":
                 self.btn_next.changeEnableState(enabled)
-            elif name == 'prev':
+            elif name == "prev":
                 self.btn_prev.changeEnableState(enabled)
-            elif name == 'stop':
+            elif name == "stop":
                 self.btn_stop.changeEnableState(enabled)
             else:
                 print("No button called %s exists in QDungeonController" % name)

@@ -1,0 +1,4 @@
+{
+    "python.formatting.blackPath": "/Users/fabriciopirini/.pyenv/versions/3.9.0/envs/archero_adb/bin/black",
+    "python.linting.flake8Path": "/Users/fabriciopirini/.pyenv/versions/3.9.0/envs/archero_adb/bin/flake8"
+}

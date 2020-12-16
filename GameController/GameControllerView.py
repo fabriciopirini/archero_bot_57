@@ -3,8 +3,20 @@ from PyQt5.QtGui import QResizeEvent
 from GameController.GameControllerModel import GameControllerModel, EngineState
 from PyQt5 import QtGui, QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QPushButton, QScrollArea, QLabel, QFormLayout, QMainWindow, \
-    QInputDialog, QGridLayout, QWidget, QSpacerItem, QComboBox
+from PyQt5.QtWidgets import (
+    QHBoxLayout,
+    QVBoxLayout,
+    QPushButton,
+    QScrollArea,
+    QLabel,
+    QFormLayout,
+    QMainWindow,
+    QInputDialog,
+    QGridLayout,
+    QWidget,
+    QSpacerItem,
+    QComboBox,
+)
 import os
 from GameController.QToolboxActions import QToolboxActions
 from GameController.QToolboxRun import QToolboxRun
@@ -16,7 +28,9 @@ from GameController.QDungeonSelector import QDungeonSelector
 
 
 class GameControllerWindow(QWidget):
-    def __init__(self, model: GameControllerModel, controller: GameControllerController):
+    def __init__(
+        self, model: GameControllerModel, controller: GameControllerController
+    ):
         super(QWidget, self).__init__()
         self.toolbar_w = 80
         self.toolbar_h = 80
@@ -39,7 +53,10 @@ class GameControllerWindow(QWidget):
         self.lblInfoHealStrategy = QLabel()
         # self.setupUi()
         self.initConnectors()
-        self.onChangeHealStrategy(self.model.engine.healingStrategy == self.model.engine.healingStrategy.AlwaysHeal)
+        self.onChangeHealStrategy(
+            self.model.engine.healingStrategy
+            == self.model.engine.healingStrategy.AlwaysHeal
+        )
         # self.model.onSourceChanged.connect(self.source_changed)
 
     def initConnectors(self):
@@ -47,7 +64,9 @@ class GameControllerWindow(QWidget):
         self.model.engine.noEnergyLeft.connect(self.onNoEnergyLeft)
         self.model.engineStatechanged.connect(self.onEngineStateChanged)
         self.model.connectionStateChanged.connect(self.onConnectionStateChange)
-        self.model.checkConnectionStateChanged.connect(self.onCheckConnectionStateChanged)
+        self.model.checkConnectionStateChanged.connect(
+            self.onCheckConnectionStateChanged
+        )
         self.model.engine.resolutionChanged.connect(self.onScreenDataChanged)
         self.model.engine.dataFolderChanged.connect(self.onScreenDataChanged)
         self.model.engine.levelChanged.connect(self.onLevelChanged)
@@ -95,10 +114,14 @@ class GameControllerWindow(QWidget):
             self.lblConnectionStatus.setStyleSheet("background-color: red;color:white")
 
     def onCheckConnectionStateChanged(self, checking: bool):
-        self.lblCheckConnectionStatus.setText('connecting..' if checking else '')
+        self.lblCheckConnectionStatus.setText("connecting.." if checking else "")
 
     def onScreenDataChanged(self):
-        self.size_info_lbl.setText("Device size:\n{}x{}".format(self.model.engine.width, self.model.engine.heigth))
+        self.size_info_lbl.setText(
+            "Device size:\n{}x{}".format(
+                self.model.engine.width, self.model.engine.heigth
+            )
+        )
         self.lblDataFolder.setText("{}".format(self.model.engine.currentDataFolder))
 
     def setupUi(self, main_window: QMainWindow):
@@ -121,20 +144,24 @@ class GameControllerWindow(QWidget):
         self.toolbarOptions.addWidget(self.lblConnectionStatus)
         self.toolbarOptions.addWidget(self.lblCheckConnectionStatus)
 
-        self.cBoxhealStrategy.addItems(['Always power','Always heal'])
-        self.lblInfoHealStrategy.setText('Healing Strategy:')
+        self.cBoxhealStrategy.addItems(["Always power", "Always heal"])
+        self.lblInfoHealStrategy.setText("Healing Strategy:")
         self.toolbarOptions.addWidget(self.lblInfoHealStrategy)
         self.toolbarOptions.addWidget(self.cBoxhealStrategy)
 
         lay_content.addWidget(self.controlWidget)
         lay_content.addWidget(self.infoLabel)
-        self.lblInfoHealStrategy.setStyleSheet("background-color: #6e6e6e; color: white")
+        self.lblInfoHealStrategy.setStyleSheet(
+            "background-color: #6e6e6e; color: white"
+        )
         self.cBoxhealStrategy.setStyleSheet("background-color: #6e6e6e; color: white")
         self.controlWidget.setStyleSheet("background-color: #6e6e6e")
         self.size_info_lbl.setStyleSheet("background-color: #6e6e6e; color: white")
-        self.lblConnectionStatus.setStyleSheet("background-color: #6e6e6e; color: white")
+        self.lblConnectionStatus.setStyleSheet(
+            "background-color: #6e6e6e; color: white"
+        )
         self.lblCheckConnectionStatus.setStyleSheet("color: white")
-        self.lblCheckConnectionStatus.setText('Starting...')
+        self.lblCheckConnectionStatus.setText("Starting...")
         self.lblDataFolder.setStyleSheet("background-color: #6e6e6e; color: white")
         self.infoLabel.setStyleSheet("background-color: #6e6e6e; color: white")
 
@@ -153,7 +180,10 @@ class GameControllerWindow(QWidget):
         self.toolbarOptions.setSpacing(10)
 
         self.content_wid.setSizePolicy(
-            QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding))
+            QtWidgets.QSizePolicy(
+                QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+            )
+        )
         # self.content_wid.setStyleSheet("background-color: rgb(43, 43, 43)")
         self.main_layout.addWidget(self.content_wid, 1, 1)
         self.setStyleSheet("background-color: #6e6e6e")

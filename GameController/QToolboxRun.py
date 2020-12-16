@@ -14,8 +14,14 @@ class QToolboxRun(QWidget):
 
     def add_element(self, name):
         button = QPushButton(name)
-        button.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding))
-        button.setStyleSheet("background-color: #4e4e4e; color: #fafafa; font-size: 15px; border: 1px solid white")
+        button.setSizePolicy(
+            QtWidgets.QSizePolicy(
+                QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+            )
+        )
+        button.setStyleSheet(
+            "background-color: #4e4e4e; color: #fafafa; font-size: 15px; border: 1px solid white"
+        )
         self.layoutMainHor.addWidget(button)
         self.elements.append([name, button])
 

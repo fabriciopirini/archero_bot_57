@@ -1,5 +1,13 @@
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QHBoxLayout, QBoxLayout, QVBoxLayout, QPushButton, QFormLayout, QLabel, QWidget
+from PyQt5.QtWidgets import (
+    QHBoxLayout,
+    QBoxLayout,
+    QVBoxLayout,
+    QPushButton,
+    QFormLayout,
+    QLabel,
+    QWidget,
+)
 from PyQt5.QtCore import Qt
 
 

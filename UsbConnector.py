@@ -15,13 +15,12 @@ https://pypi.org/project/pure-python-adb/
 
 
 class UsbConnector(object):
-
     def __init__(self):
         self.connected = False
         self._client: AdbClient = None
         self.my_device: Device = None
-        self._host = '127.0.0.1'
-        self._port = 5037
+        self._host = "127.0.0.1"
+        self._port = 5555
         self.connectionChangedFunctions = []
         self.checkingConnectionFunctions = []
         self.connectionCheckThread = WorkerThread()
@@ -52,8 +51,14 @@ class UsbConnector(object):
 
     def getDeviceSerialNo(self):
         try:
-            device = os.popen("adb devices").read().split('\n', 1)[1].split("device")[0].strip()
-            device = None if device == '' else device
+            device = (
+                os.popen("adb devices")
+                .read()
+                .split("\n", 1)[1]
+                .split("device")[0]
+                .strip()
+            )
+            device = None if device == "" else device
             return device
         except:
             return None
@@ -72,15 +77,15 @@ class UsbConnector(object):
             return True
         self._changeConnectedState(False)
         self.checkingConnectionChange(True)
-        ports = [5037, 62001]
+        ports = [5037, 5555]
         ok = False
         os.system("adb disconnect")
-        dev = 'device'
+        dev = "device"
         for p in ports:
             os.system("adb connect {}:{}".format(self._host, p))
             dev = self.getDeviceSerialNo()
             if dev is not None:
-                if 'offline' not in dev:
+                if "offline" not in dev:
                     self._port = 5037
                     ok = True
                     break
@@ -104,7 +109,7 @@ class UsbConnector(object):
 
     def _get_device_id(self) -> str:
         if not self.connected:
-            return ''
+            return ""
         return self.my_device.get_serial_no()
 
     def adb_get_size(self) -> tuple:
@@ -248,7 +253,8 @@ class UsbConnector(object):
         "KEYCODE_MENU_2": 82,
         "KEYCODE_NOTIFICATION": 83,
         "KEYCODE_SEARCH": 84,
-        "TAG_LAST_KEYCODE": 85, }
+        "TAG_LAST_KEYCODE": 85,
+    }
 
     def adb_tap_key(self, keycode: str) -> bool:
         if not self.connected:

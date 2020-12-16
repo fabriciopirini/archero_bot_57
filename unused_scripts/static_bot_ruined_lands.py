@@ -10,7 +10,7 @@ UseGeneratedData = False
 UseManualStart = True
 # Set this to true if want to automatically check for energy
 SkipEnergyCheck = True
-data_pack = 'datas'
+data_pack = "datas"
 buttons_corrdinates_filename = "data.py"
 
 device = get_device_id()
@@ -24,7 +24,9 @@ screen_connector = GameScreenConnector(width, heigth)
 
 
 def pixel_equals(px1, px2):
-    return px1[0] == px2[0] and px1[1] == px2[1] and px1[2] == px2[2] and px1[3] == px2[3]
+    return (
+        px1[0] == px2[0] and px1[1] == px2[1] and px1[2] == px2[2] and px1[3] == px2[3]
+    )
 
 
 # Those are normalized coordinates of data to be taken and trained into a simple nn to predict game status (multiclass)
@@ -32,12 +34,24 @@ def getAttributesArr():
     calculus_width = 1080
     calculus_heigth = 2220
     attr = [
-        [1024 / calculus_width, 530 / calculus_heigth],  # level up/initial ability choose (right up)
-        [50 / calculus_width, 530 / calculus_heigth],  # level up/initial ability choose (left up)
+        [
+            1024 / calculus_width,
+            530 / calculus_heigth,
+        ],  # level up/initial ability choose (right up)
+        [
+            50 / calculus_width,
+            530 / calculus_heigth,
+        ],  # level up/initial ability choose (left up)
         [1010 / calculus_width, 370 / calculus_heigth],  # blessing and devil (up right)
         [50 / calculus_width, 370 / calculus_heigth],  # blessing and devil (up left)
-        [70 / calculus_width, 870 / calculus_heigth],  # Ending game green and ending final red (up left)
-        [1110 / calculus_width, 870 / calculus_heigth],  # Ending game green and ending final red (up right)
+        [
+            70 / calculus_width,
+            870 / calculus_heigth,
+        ],  # Ending game green and ending final red (up left)
+        [
+            1110 / calculus_width,
+            870 / calculus_heigth,
+        ],  # Ending game green and ending final red (up right)
         [713 / calculus_width, 1665 / calculus_heigth],
         # special prize color (ad when blessing and devil is yellow) (center right)
         [400 / calculus_width, 1665 / calculus_heigth],
@@ -47,11 +61,20 @@ def getAttributesArr():
         [113 / calculus_width, 1336 / calculus_heigth],  # Left ability background
         [446 / calculus_width, 1336 / calculus_heigth],  # Center ability background
         [784 / calculus_width, 1336 / calculus_heigth],  # Right ability background
-        [184 / calculus_width, 1690 / calculus_heigth],  # Left angel blessing background
-        [690 / calculus_width, 1690 / calculus_heigth],  # Right angel blessing background
+        [
+            184 / calculus_width,
+            1690 / calculus_heigth,
+        ],  # Left angel blessing background
+        [
+            690 / calculus_width,
+            1690 / calculus_heigth,
+        ],  # Right angel blessing background
         [500 / calculus_width, 1900 / calculus_heigth],  # Left playing joystick blue
         [570 / calculus_width, 1690 / calculus_heigth],  # Right playing joystick blue
-        [1060 / calculus_width, 60 / calculus_heigth],  # up right money grey count playing
+        [
+            1060 / calculus_width,
+            60 / calculus_heigth,
+        ],  # up right money grey count playing
     ]
     return attr
 
@@ -72,14 +95,14 @@ def getCoordinates():
     offsety = 400 / calculus_heigth
 
     movements = {
-        'n': [x, y, x, y - offsety],
-        's': [x, y, x, y + offsety],
-        'e': [x, y, x + offsetx, y],
-        'w': [x, y, x - offsetx, y],
-        'ne': [x, y, x + offsetx, y - offsety],
-        'nw': [x, y, x - offsetx, y - offsety],
-        'se': [x, y, x + offsetx, y + offsety],
-        'sw': [x, y, x + offsety, y + offsety]
+        "n": [x, y, x, y - offsety],
+        "s": [x, y, x, y + offsety],
+        "e": [x, y, x + offsetx, y],
+        "w": [x, y, x - offsetx, y],
+        "ne": [x, y, x + offsetx, y - offsety],
+        "nw": [x, y, x - offsetx, y - offsety],
+        "se": [x, y, x + offsetx, y + offsety],
+        "sw": [x, y, x + offsety, y + offsety],
     }
     return x, y, movements
 
@@ -90,7 +113,9 @@ buttons, x, y, movements = {}, 0, 0, {}
 def swipe(name, s):
     coord = movements[name]
     # convert back from normalized values
-    adb_swipe([coord[0] * width, coord[1] * heigth, coord[2] * width, coord[3] * heigth], s)
+    adb_swipe(
+        [coord[0] * width, coord[1] * heigth, coord[2] * width, coord[3] * heigth], s
+    )
 
 
 def tap(name):
@@ -105,23 +130,23 @@ def wait(s):
 
 def chooseLands():
     print("Main menu")
-    tap('start')
+    tap("start")
     wait(3)
 
 
 def play_lands():
     # Play intro
     wait(2)
-    tap('ability_daemon_reject')
-    tap('ability_left')
-    swipe('n', 3)
+    tap("ability_daemon_reject")
+    tap("ability_left")
+    swipe("n", 3)
     wait(5)
-    tap('lucky_wheel_start')
+    tap("lucky_wheel_start")
     wait(5)
-    swipe('n', 2)
+    swipe("n", 2)
     # First level
-    swipe('n', 1.5)
-    swipe('n', .5)
+    swipe("n", 1.5)
+    swipe("n", 0.5)
 
 
 def main():
@@ -130,25 +155,31 @@ def main():
     buttons = getGeneratedData()
     # Wait and tap home in case some ad opos up
     wait(5)
-    tap('menu_world')
+    tap("menu_world")
     # Remove armor
-    tap('menu_equipment')
+    tap("menu_equipment")
     wait(1)
-    tap('menu_avatar_weapon')
+    tap("menu_avatar_weapon")
     wait(1)
     frame = screen_connector.getFrame()
-    if screen_connector._check_screen_points_equal([[855 / 1080, 1576 / 2220]], [[231, 191, 105, 255]]):
-        tap('menu_equip_weapon')
+    if screen_connector._check_screen_points_equal(
+        [[855 / 1080, 1576 / 2220]], [[231, 191, 105, 255]]
+    ):
+        tap("menu_equip_weapon")
         print("Removing armor...")
     else:
         print("Already no armor, returning to menu...")
     wait(2)
-    tap('menu_world')
+    tap("menu_world")
     while True:
         if UseManualStart:
-            a = input("Press enter to start a game (your energy bar must be at least 5)")
+            a = input(
+                "Press enter to start a game (your energy bar must be at least 5)"
+            )
         else:
-            while (not SkipEnergyCheck) and not screen_connector.checkFrame("least_5_energy"):
+            while (not SkipEnergyCheck) and not screen_connector.checkFrame(
+                "least_5_energy"
+            ):
                 print("No energy, waiting for one minute")
                 wait(60)
         chooseLands()
@@ -159,7 +190,7 @@ def main():
         print("Game ended!!")
         wait(5)
         print("Going back to menu...")
-        tap('close_end')
+        tap("close_end")
         wait(2)
 
 
@@ -182,11 +213,15 @@ def getGeneratedData():
         method = import_method(data_pack, buttons_corrdinates_filename, "getButtons")
         return method()
     elif os.path.exists(os.path.join(data_pack, buttons_corrdinates_default_filename)):
-        method = import_method(data_pack, buttons_corrdinates_default_filename, "getButtons")
+        method = import_method(
+            data_pack, buttons_corrdinates_default_filename, "getButtons"
+        )
         return method()
     else:
-        print("No %s or d%s scripts are available. check your files." % (
-            buttons_corrdinates_filename, buttons_corrdinates_default_filename))
+        print(
+            "No %s or d%s scripts are available. check your files."
+            % (buttons_corrdinates_filename, buttons_corrdinates_default_filename)
+        )
         exit(1)
 
 

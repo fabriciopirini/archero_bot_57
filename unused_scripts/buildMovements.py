@@ -14,17 +14,17 @@ def saveMovements(path: str):
     offsety = 400 / calculus_heigth
 
     movements = {
-        'n': [[x, y], [x, y - offsety]],
-        's': [[x, y], [x, y + offsety]],
-        'e': [[x, y], [x + offsetx, y]],
-        'w': [[x, y], [x - offsetx, y]],
-        'ne': [[x, y], [x + offsetx, y - offsety]],
-        'nw': [[x, y], [x - offsetx, y - offsety]],
-        'se': [[x, y], [x + offsetx, y + offsety]],
-        'sw': [[x, y], [x - offsetx, y + offsety]]
+        "n": [[x, y], [x, y - offsety]],
+        "s": [[x, y], [x, y + offsety]],
+        "e": [[x, y], [x + offsetx, y]],
+        "w": [[x, y], [x - offsetx, y]],
+        "ne": [[x, y], [x + offsetx, y - offsety]],
+        "nw": [[x, y], [x - offsetx, y - offsety]],
+        "se": [[x, y], [x + offsetx, y + offsety]],
+        "sw": [[x, y], [x - offsetx, y + offsety]],
     }
-    with open(path, 'w') as fp:
+    with open(path, "w") as fp:
         json.dump(movements, fp)
 
 
-saveMovements('../datas/1080x2280/movements_sample.json')
+saveMovements("../datas/1080x2280/movements_sample.json")

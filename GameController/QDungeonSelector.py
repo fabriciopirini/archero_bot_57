@@ -1,6 +1,14 @@
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QBoxLayout, QVBoxLayout, QPushButton, QWidget, QInputDialog
+from PyQt5.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QBoxLayout,
+    QVBoxLayout,
+    QPushButton,
+    QWidget,
+    QInputDialog,
+)
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from GameController.GameControllerModel import GameControllerModel
@@ -8,7 +16,12 @@ from GameController.GameControllerController import GameControllerController
 
 
 class QDungeonSelector(QWidget):
-    def __init__(self, parent: QWidget, controller: GameControllerController, model: GameControllerModel):
+    def __init__(
+        self,
+        parent: QWidget,
+        controller: GameControllerController,
+        model: GameControllerModel,
+    ):
         super(QWidget, self).__init__()
         self.model = model
         self.controller = controller
@@ -34,7 +47,7 @@ class QDungeonSelector(QWidget):
         self.layoutMainHor.setSpacing(0)
         self.layoutMainHor.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.layoutMainHor)
-        self.SelectionEnabled = True # Set this to block dungeon select
+        self.SelectionEnabled = True  # Set this to block dungeon select
 
     def initConnectors(self):
         self.controller.chapterChanged.connect(self.onCurrentChapterChanged)
@@ -45,7 +58,7 @@ class QDungeonSelector(QWidget):
 
     def getChapterNumber(self, ch_name):
         # ch = self.model.chapters[target_ch]
-        splat = ch_name.split('.')
+        splat = ch_name.split(".")
         return int(splat[0])
 
     def askForChapter(self):
@@ -72,6 +85,10 @@ class QDungeonSelector(QWidget):
     def onCurrentChapterChanged(self, ch_number: int):
         self.lblCurrentDungeon.clear()
         pixmap = QtGui.QPixmap(self.model.getChapterImagePath(ch_number))
-        pixmap = pixmap.scaled(self.lblCurrentDungeon.width(), self.lblCurrentDungeon.height(), Qt.KeepAspectRatio)
+        pixmap = pixmap.scaled(
+            self.lblCurrentDungeon.width(),
+            self.lblCurrentDungeon.height(),
+            Qt.KeepAspectRatio,
+        )
         self.lblCurrentDungeon.setPixmap(pixmap)
         self.currentChapter = self.model.chapters[ch_number]

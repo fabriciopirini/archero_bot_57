@@ -10,8 +10,10 @@ This script uses os.system and os.popen to run commands through a shell. Try use
 
 def get_device_id():
     try:
-        device = os.popen("adb devices").read().split('\n', 1)[1].split("device")[0].strip()
-        device = None if device == '' else device
+        device = (
+            os.popen("adb devices").read().split("\n", 1)[1].split("device")[0].strip()
+        )
+        device = None if device == "" else device
         return device
     except:
         return None
@@ -19,25 +21,25 @@ def get_device_id():
 
 def adb_get_size():
     os.system("adb exec-out screencap -p > test_size.png")
-    im = Image.open("test_size.png", 'r')
+    im = Image.open("test_size.png", "r")
     w, h = im.size
     im.close()
     os.remove("test_size.png")
     return w, h
 
 
-def adb_screen(name:str = "screen.png"):
+def adb_screen(name: str = "screen.png"):
     """
     Executes a screen and saved it in current folder as 'screen.png'
     :return:
     """
-    os.system("adb exec-out screencap -p > "+name)
+    os.system("adb exec-out screencap -p > " + name)
 
 
 def adb_screen_getpixels():
     os.system("adb exec-out screencap -p > screen.png")
     pixval = None
-    with Image.open("../screen.png", 'r') as im:
+    with Image.open("../screen.png", "r") as im:
         pixval = np.array(im.getdata())
     return pixval
 
@@ -52,8 +54,13 @@ def adb_swipe(locations, s):
     """
     s = int(s * 1000)
     x1, y1, x2, y2 = locations[0], locations[1], locations[2], locations[3]
-    print("Swiping from (%d, %d) --> (%d, %d) in %d" % (int(x1), int(y1), int(x2), int(y2), s))
-    os.system("adb shell input swipe %d %d %d %d %d" % (int(x1), int(y1), int(x2), int(y2), s))
+    print(
+        "Swiping from (%d, %d) --> (%d, %d) in %d"
+        % (int(x1), int(y1), int(x2), int(y2), s)
+    )
+    os.system(
+        "adb shell input swipe %d %d %d %d %d" % (int(x1), int(y1), int(x2), int(y2), s)
+    )
 
 
 def adb_tap(coord):
@@ -154,7 +161,8 @@ keycodes = {
     "KEYCODE_MENU_2": 82,
     "KEYCODE_NOTIFICATION": 83,
     "KEYCODE_SEARCH": 84,
-    "TAG_LAST_KEYCODE": 85, }
+    "TAG_LAST_KEYCODE": 85,
+}
 
 
 def adb_tap_key(keycode: str):

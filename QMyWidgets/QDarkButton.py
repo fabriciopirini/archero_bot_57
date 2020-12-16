@@ -9,8 +9,10 @@ class QDarkButton(QPushButton):
 
     def __init__(self):
         QPushButton.__init__(self)
-        self.setStyleSheet("background-color: (225,225,225); border-radius: 2px;text-align: center")
-        self.pressedColor = 'gray'  # '(52, 52, 52)'
+        self.setStyleSheet(
+            "background-color: (225,225,225); border-radius: 2px;text-align: center"
+        )
+        self.pressedColor = "gray"  # '(52, 52, 52)'
         self.changeSheetFunction = self.setStyleSheet
         self.isEnabledFunction = self.isEnabled
         self.size = 50
@@ -20,10 +22,15 @@ class QDarkButton(QPushButton):
     def changeEnableState(self, active):
         self.setEnabled(active)
         if active:
-            self.changeSheetFunction("background-color: (225,225,225); border-radius: 2px;text-align: center")
+            self.changeSheetFunction(
+                "background-color: (225,225,225); border-radius: 2px;text-align: center"
+            )
         else:
             self.changeSheetFunction(
-                "background-color: {}; border-radius: 2px;text-align: center".format(self.pressedColor))
+                "background-color: {}; border-radius: 2px;text-align: center".format(
+                    self.pressedColor
+                )
+            )
 
     def changeSize(self, size: int):
         self.size = size
@@ -35,14 +42,21 @@ class QDarkButton(QPushButton):
 
     def enterEvent(self, event):
         if self.isEnabledFunction():
-            self.changeSheetFunction("background-color: gray; border-radius: 2px;text-align: center")
+            self.changeSheetFunction(
+                "background-color: gray; border-radius: 2px;text-align: center"
+            )
 
     def leaveEvent(self, event):
         if self.isEnabledFunction():
-            self.changeSheetFunction("background-color: (225,225,225); border-radius: 2px;text-align: center")
+            self.changeSheetFunction(
+                "background-color: (225,225,225); border-radius: 2px;text-align: center"
+            )
 
     @QtCore.pyqtSlot()
     def button_clicked(self):
         self.changeSheetFunction(
-            "background-color: {}; border-radius: 2px;text-align: center".format(self.pressedColor))
+            "background-color: {}; border-radius: 2px;text-align: center".format(
+                self.pressedColor
+            )
+        )
         self.buttonClicked.emit()

@@ -10,15 +10,15 @@ def getCoordinates():
     calculus_heigth = 2220
 
     buttons = {
-        'pause': [20 / calculus_width, 20 / calculus_heigth],
-        'start': [540 / calculus_width, 1700 / calculus_heigth],
-        'collect_time_prize': [330 / calculus_width, 1490 / calculus_heigth],
-        'ability_left': [210 / calculus_width, 1500 / calculus_heigth],
-        'ability_center': [540 / calculus_width, 1500 / calculus_heigth],
-        'ability_right': [870 / calculus_width, 1500 / calculus_heigth],
-        'spin_wheel_back': [85 / calculus_width, 2140 / calculus_heigth],
-        'lucky_wheel_start': [540 / calculus_width, 1675 / calculus_heigth],
-        'ability_daemon_reject': [175 / calculus_width, 1790 / calculus_heigth]
+        "pause": [20 / calculus_width, 20 / calculus_heigth],
+        "start": [540 / calculus_width, 1700 / calculus_heigth],
+        "collect_time_prize": [330 / calculus_width, 1490 / calculus_heigth],
+        "ability_left": [210 / calculus_width, 1500 / calculus_heigth],
+        "ability_center": [540 / calculus_width, 1500 / calculus_heigth],
+        "ability_right": [870 / calculus_width, 1500 / calculus_heigth],
+        "spin_wheel_back": [85 / calculus_width, 2140 / calculus_heigth],
+        "lucky_wheel_start": [540 / calculus_width, 1675 / calculus_heigth],
+        "ability_daemon_reject": [175 / calculus_width, 1790 / calculus_heigth],
     }
 
     # pointer base coordinates
@@ -29,21 +29,21 @@ def getCoordinates():
     offsety = 400 / calculus_heigth
 
     movements = {
-        'n': [x, y, x, y - offsety],
-        's': [x, y, x, y + offsety],
-        'e': [x, y, x + offsetx, y],
-        'w': [x, y, x - offsetx, y],
-        'ne': [x, y, x + offsetx, y - offsety],
-        'nw': [x, y, x - offsetx, y - offsety],
-        'se': [x, y, x + offsetx, y + offsety],
-        'sw': [x, y, x + offsety, y + offsety]
+        "n": [x, y, x, y - offsety],
+        "s": [x, y, x, y + offsety],
+        "e": [x, y, x + offsetx, y],
+        "w": [x, y, x - offsetx, y],
+        "ne": [x, y, x + offsetx, y - offsety],
+        "nw": [x, y, x - offsetx, y - offsety],
+        "se": [x, y, x + offsetx, y + offsety],
+        "sw": [x, y, x + offsety, y + offsety],
     }
     return buttons, x, y, movements
 
 
 # Having cellphones with big screens make image show too big. change this paramenter in [0,1] to resize automatically
 resize_factor_show = 1
-images_path = '../datas/1080x2220/1080x2220/'
+images_path = "../datas/1080x2220/1080x2220/"
 save_images = False
 # All saved images goes to screens_out folder if save_images is true
 
