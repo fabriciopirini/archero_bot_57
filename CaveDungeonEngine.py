@@ -205,7 +205,6 @@ class CaveEngine(QObject):
     def tap(self, name):
         if self.stopRequested:
             exit()
-        logger.info("Tap %s" % name)
         # convert back from normalized values
         x, y = int(self.buttons[name][0] * self.width), int(self.buttons[name][1] * self.heigth)
         logger.info("Tapping on %s at [%d, %d]" % (name, x, y))
@@ -346,7 +345,7 @@ class CaveEngine(QObject):
 
     def letPlay(self, _time: int, is_boss=False):
         check_exp_bar = not is_boss
-        self.wait(2)
+        # self.wait(2)
         logger.info("Auto attacking")
         experience_bar_line = self.screen_connector.getLineExpBar()
         recheck = False
@@ -403,7 +402,7 @@ class CaveEngine(QObject):
     def reactGamePopups(self) -> None:
         state = ""
         i = 0
-        wait_time = 2
+        wait_time = 1
         wait_time_wheel = 5
         have_battle_pass = True
 
@@ -413,7 +412,7 @@ class CaveEngine(QObject):
             if i > self.max_loops_game:
                 logger.info("Max loops reached")
                 self._exitEngine()
-            logger.info("screen check")
+            logger.info("Checking screen...")
             state = self.screen_connector.getFrameState()
             logger.info("state: %s" % state)
             if state == "select_ability":
@@ -589,9 +588,8 @@ class CaveEngine(QObject):
         self.stat_lvl_start = self.currentLevel
         self.stopRequested = False
         self.screen_connector.stopRequested = False
-        logger.info("New game started")
         logger.info("New game. Starting from level %d" % self.currentLevel)
-        self.wait(4)
+        self.wait(2)
         if self.screen_connector.checkFrame("time_prize"):
             logger.info("Collecting time prize")
             self.tap("resume")

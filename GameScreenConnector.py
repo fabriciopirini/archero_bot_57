@@ -196,20 +196,26 @@ class GameScreenConnector:
             result[k] = self._check_screen_points_equal(frame, v["coordinates"], v["values"], around=around)
         return result
 
-    def getFrameState(self, frame=None) -> str:
-        """
-        Computes a complete check on given frame (takes a screen if none passed.
-        Returns a string with the name of current state, or unknown if no state found.
-        :return:
-        """
-        state = "unknown"
-        start_time = time.perf_counter()
+    def define_state_by_pixel_matching(self, frame) -> str:
+        if frame is None:
+            frame = self.getFrame()
+        for k, v in self.static_coords.items():
+            around = 2 if "around" not in self.static_coords[k].keys() else self.static_coords[k]["around"]
+            if self.debug:
+                print("Checking %s, around = %d" % (k, around))
+            if self._check_screen_points_equal(frame, v["coordinates"], v["values"], around=around):
+                return k
+        return "unknown"
 
+    def define_state_by_OCR(self) -> str:
         os.system("adb exec-out screencap -p >  screen.png")
         image = cv2.imread("screen.png")
         extracted_text = extract_text_from_image(image).lower()
+        logger.info(f"Text extracted: {extracted_text}")
 
-        if "mysterious" in extracted_text and "vendor" in extracted_text:
+        if "in_game" in extracted_text:
+            return "in_game"
+        elif "mysterious" in extracted_text and "vendor" in extracted_text:
             return "mistery_vendor"
         elif "angel" in extracted_text:
             return "angel_heal"
@@ -222,6 +228,18 @@ class GameScreenConnector:
         elif "devil" in extracted_text:
             return "devil_question"
 
+        return "unknown"
+
+    def getFrameState(self, frame=None) -> str:
+        """
+        Computes a complete check on given frame (takes a screen if none passed.
+        Returns a string with the name of current state, or unknown if no state found.
+        :return:
+        """
+        start_time = time.perf_counter()
+
+        state = self.define_state_by_OCR()
+
         end_time = time.perf_counter()
         logger.info(f"OCR detection took {end_time-start_time:0.4f} seconds")
 
@@ -229,19 +247,10 @@ class GameScreenConnector:
             start_time = time.perf_counter()
             logger.info("Couldn't detect state. Falling back for Pixel matching...")
 
-            if frame is None:
-                frame = self.getFrame()
-            logger.info(f"self.static_coords.items(): {len(self.static_coords.items())}")
-            for k, v in self.static_coords.items():
-                around = 2 if "around" not in self.static_coords[k].keys() else self.static_coords[k]["around"]
-                if self.debug:
-                    print("Checking %s, around = %d" % (k, around))
-                if self._check_screen_points_equal(frame, v["coordinates"], v["values"], around=around):
-                    end_time = time.perf_counter()
-                    logger.info(f"Pixel detection took {end_time-start_time:0.4f} seconds")
-                    return k
+            state = self.define_state_by_pixel_matching(frame)
 
             end_time = time.perf_counter()
+
             logger.info(f"Pixel detection failed in {end_time-start_time:0.4f} seconds")
 
         return state
@@ -352,7 +361,7 @@ class GameScreenConnector:
             dir = "center"
         else:
             dir = "right" if center_diff < 0 else "left"
-        print("Character on the %s side by %dpx" % (dir, abs(center_diff)))
+        logger.info("Character on the %s side by %dpx" % (dir, abs(center_diff)))
         return center_diff, dir
 
     def getLineHpBar(self, frame=None):

@@ -8,7 +8,7 @@ if __name__ == "__main__":
     import logging
 
     logging.basicConfig(
-        format="%(asctime)s [%(levelname)s] %(message)s",
+        format="%(asctime)s [%(levelname)s] [%(funcName)s] %(message)s",
         level=logging.INFO,
         datefmt="%H:%M:%S",
     )
