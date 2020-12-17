@@ -72,12 +72,8 @@ class MovementOption(QWidget):
         self.changeData([[0, 0], [0, 0]])
 
     def initConnectors(self):
-        self.rBtnChangeableSrc.toggled.connect(
-            partial(self.controller.onCoordinateSelected, 0)
-        )
-        self.rBtnChangeableDst.toggled.connect(
-            partial(self.controller.onCoordinateSelected, 1)
-        )
+        self.rBtnChangeableSrc.toggled.connect(partial(self.controller.onCoordinateSelected, 0))
+        self.rBtnChangeableDst.toggled.connect(partial(self.controller.onCoordinateSelected, 1))
 
     def changeData(self, new_data):
         w, h = self.controller.current_image_size

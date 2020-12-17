@@ -42,18 +42,14 @@ class TouchManagerModel(QObject):
         self.ui_lines_color_rgb = (0, 255, 0)
         self.ui_lines_color_rgb_selected = (255, 0, 255)
         self.linePermittedSizes = [i for i in range(1, 20, 1)]
-        self.currentLineWidth = self.linePermittedSizes[
-            int(len(self.linePermittedSizes) / 2.0)
-        ]
+        self.currentLineWidth = self.linePermittedSizes[int(len(self.linePermittedSizes) / 2.0)]
         self.currentFiles = {}
         self.currentDict = {}
         self.currentMovements = {}
         self.currentFrameChecks = {}
         self.screensFolders = readAllSizesFolders()
         self.device_connector = UsbConnector()
-        self.device_connector.connectionChangedFunctions.append(
-            self.onDeviceConnectionChanged
-        )
+        self.device_connector.connectionChangedFunctions.append(self.onDeviceConnectionChanged)
 
     def onDeviceConnectionChanged(self, conn):
         pass
@@ -69,9 +65,7 @@ class TouchManagerModel(QObject):
         return getCoordFilePath(dict_name, sizePath=self.currentScreensFolder)
 
     def currentScreensPath(self):
-        return os.path.join(
-            self.data_pack, self.currentScreensFolder, self.screens_folder
-        )
+        return os.path.join(self.data_pack, self.currentScreensFolder, self.screens_folder)
 
     def is_device_connected(self):
         return self.device_connector.connected
@@ -80,12 +74,8 @@ class TouchManagerModel(QObject):
         filename = name + ".png"
         if not self.device_connector.connected:
             return
-        self.device_connector.adb_screen(
-            os.path.join(self.currentScreensPath(), filename)
-        )
-        self.currentFiles = {
-            k: None for k in self.loadImagesFromSource(self.currentScreensPath())
-        }
+        self.device_connector.adb_screen(os.path.join(self.currentScreensPath(), filename))
+        self.currentFiles = {k: None for k in self.loadImagesFromSource(self.currentScreensPath())}
         self.onImageAdded.emit(filename)
 
     def addElementButton(self, point_name):
@@ -115,11 +105,7 @@ class TouchManagerModel(QObject):
             os.makedirs(self.currentScreensPath())
 
     def getPositions(self, dict_button):
-        return (
-            self.currentDict[dict_button].copy()
-            if dict_button in self.currentDict
-            else None
-        )
+        return self.currentDict[dict_button].copy() if dict_button in self.currentDict else None
 
     def changeButtonPosition(self, dict_button, new_location):
         if dict_button in self.currentDict:
@@ -158,9 +144,7 @@ class TouchManagerModel(QObject):
         self.load_buttons()
 
     def loadScreens(self):
-        self.currentFiles = {
-            k: None for k in self.loadImagesFromSource(self.currentScreensPath())
-        }
+        self.currentFiles = {k: None for k in self.loadImagesFromSource(self.currentScreensPath())}
         self.onSourceChanged.emit(self.currentFiles)
 
     def load_buttons(self):
@@ -168,15 +152,11 @@ class TouchManagerModel(QObject):
         self.onDictionaryTapsChanged.emit(self.currentDict)
 
     def loadMovements(self):
-        self.currentMovements = loadJsonData(
-            self.buildCoordFilePath(self.movements_folder)
-        )
+        self.currentMovements = loadJsonData(self.buildCoordFilePath(self.movements_folder))
         self.onDictionaryMovementsChanged.emit(self.currentMovements)
 
     def loadScreenCheck(self):
-        self.currentFrameChecks = loadJsonData(
-            self.buildCoordFilePath(self.static_coords_folder)
-        )
+        self.currentFrameChecks = loadJsonData(self.buildCoordFilePath(self.static_coords_folder))
         self.onDictionaryFrameChecksChanged.emit(self.currentFrameChecks)
 
     def changeScreensFolder(self, new_folder):
@@ -186,17 +166,9 @@ class TouchManagerModel(QObject):
             self.screensFolderChanged.emit(self.currentScreensFolder)
 
     def loadImagesFromSource(self, img_path):
-        return [
-            file for file in sorted(os.listdir(img_path))
-        ]  # if file.endswith(".jpg")]
+        return [file for file in sorted(os.listdir(img_path))]  # if file.endswith(".jpg")]
 
     def save_data(self):
-        saveJsonData_oneIndent(
-            self.buildCoordFilePath(self.buttons_folder), self.currentDict
-        )
-        saveJsonData_oneIndent(
-            self.buildCoordFilePath(self.movements_folder), self.currentMovements
-        )
-        saveJsonData_twoIndent(
-            self.buildCoordFilePath(self.static_coords_folder), self.currentFrameChecks
-        )
+        saveJsonData_oneIndent(self.buildCoordFilePath(self.buttons_folder), self.currentDict)
+        saveJsonData_oneIndent(self.buildCoordFilePath(self.movements_folder), self.currentMovements)
+        saveJsonData_twoIndent(self.buildCoordFilePath(self.static_coords_folder), self.currentFrameChecks)

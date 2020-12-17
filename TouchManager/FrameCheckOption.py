@@ -120,34 +120,19 @@ class FrameCheckOption(QWidget):
             # lay_row.addWidget(QLabel("Y: %4d" % (coord[1] * h)))
             colors = newData["values"][i]
             lblColor = QLabel("")
-            lblColor.setStyleSheet(
-                "background-color: rgb({},{},{});".format(
-                    colors[0], colors[1], colors[2]
-                )
-            )
+            lblColor.setStyleSheet("background-color: rgb({},{},{});".format(colors[0], colors[1], colors[2]))
             lblColor.mousePressEvent = partial(self.onManualChoose, i)
-            lblColor.setToolTip(
-                "Target value RGB=(%d, %d, %d)" % (colors[0], colors[1], colors[2])
-            )
+            lblColor.setToolTip("Target value RGB=(%d, %d, %d)" % (colors[0], colors[1], colors[2]))
             lblColor.setMaximumWidth(40)
             self.lblsColors.append(lblColor)
             btnSet = QPushButton("set->")
             btnSet.setMaximumWidth(45)
-            btnSet.clicked.connect(
-                partial(self.controller.requestSetCurrentColorToFrameCheckColor, i)
-            )
+            btnSet.clicked.connect(partial(self.controller.requestSetCurrentColorToFrameCheckColor, i))
             lblimgColor = QLabel("")
             lblimgColor.setMaximumWidth(20)
             color_ = newData["currentScreenColors"][i]
-            lblimgColor.setStyleSheet(
-                "background-color: rgb({},{},{});".format(
-                    color_[0], color_[1], color_[2]
-                )
-            )
-            lblimgColor.setToolTip(
-                "Current screenshot RGB=(%d, %d, %d)"
-                % (color_[0], color_[1], color_[2])
-            )
+            lblimgColor.setStyleSheet("background-color: rgb({},{},{});".format(color_[0], color_[1], color_[2]))
+            lblimgColor.setToolTip("Current screenshot RGB=(%d, %d, %d)" % (color_[0], color_[1], color_[2]))
             lblimgColor.setToolTipDuration(20 * 1000)
             self.lblImageColors.append(lblimgColor)
             lay_row.addWidget(lblimgColor)
@@ -190,7 +175,5 @@ class FrameCheckOption(QWidget):
                 self._setAroundSafe(new_data["around"])
 
     def deleteLater(self):
-        self.controller.onCurrentScreenColorsChanged.disconnect(
-            self.updateCurrentColors
-        )
+        self.controller.onCurrentScreenColorsChanged.disconnect(self.updateCurrentColors)
         super(FrameCheckOption, self).deleteLater()

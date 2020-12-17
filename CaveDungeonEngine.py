@@ -101,12 +101,9 @@ class CaveEngine(QObject):
         self.screen_connector.debug = False
         self.width, self.heigth = 1080, 2220
         self.device_connector = UsbConnector()
-        self.device_connector.setFunctionToCallOnConnectionStateChanged(
-            self.onConnectionStateChanged
-        )
+        self.device_connector.setFunctionToCallOnConnectionStateChanged(self.onConnectionStateChanged)
         self.buttons = {}
         self.movements = {}
-        self.disableLogs = False
         self.stopRequested = False
         self.currentDataFolder = ""
         self.dataFolders = {}
@@ -121,10 +118,7 @@ class CaveEngine(QObject):
         deviceFolder = buildDataFolder(self.width, self.heigth)
         first_folder = list(self.dataFolders.keys())[0]
         if deviceFolder not in self.dataFolders:
-            logger.info(
-                "Error: not having %s coordinates. Trying with %s"
-                % (deviceFolder, first_folder)
-            )
+            logger.info("Error: not having %s coordinates. Trying with %s" % (deviceFolder, first_folder))
             deviceFolder = first_folder
         self.changeCurrentDataFolder(deviceFolder)
 
@@ -132,9 +126,7 @@ class CaveEngine(QObject):
         self.device_connector.connect()
 
     def changeHealStrategy(self, always_heal: bool):
-        self.healingStrategy = (
-            HealingStrategy.AlwaysHeal if always_heal else HealingStrategy.AlwaysPowerUp
-        )
+        self.healingStrategy = HealingStrategy.AlwaysHeal if always_heal else HealingStrategy.AlwaysPowerUp
         self.healingStrategyChanged.emit(always_heal)
 
     def changeChapter(self, new_chapter):
@@ -152,9 +144,7 @@ class CaveEngine(QObject):
             self.changeScreenSize(w, h)
             self.screen_connector.changeScreenSize(w, h)
         else:
-            logger.info(
-                "Device connector is none. initialize it before calling this method!"
-            )
+            logger.info("Device connector is none. initialize it before calling this method!")
 
     def changeCurrentDataFolder(self, new_folder):
         self.currentDataFolder = new_folder
@@ -162,19 +152,13 @@ class CaveEngine(QObject):
         self.dataFolderChanged.emit(new_folder)
 
     def loadCoords(self):
-        self.buttons = loadJsonData(
-            getCoordFilePath(self.buttons_filename, sizePath=self.currentDataFolder)
-        )
-        self.movements = loadJsonData(
-            getCoordFilePath(self.movements_filename, sizePath=self.currentDataFolder)
-        )
+        self.buttons = loadJsonData(getCoordFilePath(self.buttons_filename, sizePath=self.currentDataFolder))
+        self.movements = loadJsonData(getCoordFilePath(self.movements_filename, sizePath=self.currentDataFolder))
 
     def setStopRequested(self):
         self.stopRequested = True
         self.screen_connector.stopRequested = True
-        self.statisctics_manager.saveOneGame(
-            self.start_date, self.stat_lvl_start, self.currentLevel
-        )
+        self.statisctics_manager.saveOneGame(self.start_date, self.stat_lvl_start, self.currentLevel)
 
     def changeScreenSize(self, w, h):
         self.width, self.heigth = w, h
@@ -184,9 +168,7 @@ class CaveEngine(QObject):
     def __unused__initConnection(self):
         device = self.device_connector._get_device_id()
         if device is None:
-            logger.info(
-                "Error: no device discovered. Start adb server before executing this."
-            )
+            logger.info("Error: no device discovered. Start adb server before executing this.")
             exit(1)
         logger.info("Usb debugging device: %s" % device)
 
@@ -208,7 +190,7 @@ class CaveEngine(QObject):
         if self.stopRequested:
             exit()
         coord = self.movements[name]
-        logger.info("Swiping %s in %.2f" % (self.print_names_movements[name], s))
+        logger.debug("Swiping %s in %.2f" % (self.print_names_movements[name], s))
         # convert back from normalized values
         self.device_connector.adb_swipe(
             [
@@ -225,9 +207,7 @@ class CaveEngine(QObject):
             exit()
         logger.info("Tap %s" % name)
         # convert back from normalized values
-        x, y = int(self.buttons[name][0] * self.width), int(
-            self.buttons[name][1] * self.heigth
-        )
+        x, y = int(self.buttons[name][0] * self.width), int(self.buttons[name][1] * self.heigth)
         logger.info("Tapping on %s at [%d, %d]" % (name, x, y))
         self.device_connector.adb_tap((x, y))
 
@@ -292,19 +272,14 @@ class CaveEngine(QObject):
 
     def goTroughDungeon10(self):
         logger.info("Going through dungeon (designed for #10)")
-        logger.info("Cross dungeon 10")
-        self.disableLogs = True
         self.swipe("n", 0.5)
         self.swipe("nw", 4)
         self.swipe("ne", 4)
         self.swipe("nw", 2)
         self.swipe("e", 0.20)
-        self.disableLogs = False
 
     def goTroughDungeon_old(self):
         logger.info("Going through dungeon old design 'S')")
-        logger.info("Cross dungeon (old)")
-        self.disableLogs = True
         self.swipe("n", 1.5)
         self.swipe("w", 0.32)
         self.swipe("n", 0.5)
@@ -313,12 +288,9 @@ class CaveEngine(QObject):
         self.swipe("n", 0.5)
         self.swipe("w", 0.325)
         self.swipe("n", 1.5)
-        self.disableLogs = False
 
     def goTroughDungeon6(self):
         logger.info("Going through dungeon (designed for #6)")
-        logger.info("Cross dungeon 6")
-        self.disableLogs = True
         self.swipe("n", 1.5)
         self.swipe("w", 0.32)
         self.swipe("n", 0.5)
@@ -330,12 +302,9 @@ class CaveEngine(QObject):
         self.swipe("n", 1.6)
         self.swipe("e", 0.28)
         self.swipe("n", 2.5)
-        self.disableLogs = False
 
     def goTroughDungeon3(self):
         logger.info("Going through dungeon (designed for #3)")
-        logger.info("Cross dungeon 3")
-        self.disableLogs = True
         self.swipe("n", 1.5)
         self.swipe("w", 0.25)
         self.swipe("n", 0.5)
@@ -346,7 +315,6 @@ class CaveEngine(QObject):
         self.swipe("n", 0.5)
         self.swipe("e", 1)
         self.swipe("n", 0.3)
-        self.disableLogs = False
 
     def goTroughDungeon(self):
         if self.currentDungeon == 3:
@@ -415,9 +383,7 @@ class CaveEngine(QObject):
                     logger.info("Level ended. Collecting results for leveling up.")
                     self.wait(1)
                     return
-                elif check_exp_bar and self.screen_connector.checkExpBarHasChanged(
-                    experience_bar_line, frame
-                ):
+                elif check_exp_bar and self.screen_connector.checkExpBarHasChanged(experience_bar_line, frame):
                     logger.info("Experience gained!")
                     self.wait(3)
                     return
@@ -431,12 +397,10 @@ class CaveEngine(QObject):
             self.wait(1)
 
     def _exitEngine(self):
-        self.statisctics_manager.saveOneGame(
-            self.start_date, self.stat_lvl_start, self.currentLevel
-        )
+        self.statisctics_manager.saveOneGame(self.start_date, self.stat_lvl_start, self.currentLevel)
         exit(1)
 
-    def reactGamePopups(self) -> int:
+    def reactGamePopups(self) -> None:
         state = ""
         i = 0
         wait_time = 2
@@ -457,6 +421,7 @@ class CaveEngine(QObject):
             elif state == "fortune_wheel":
                 self.tap("lucky_wheel_start")
                 self.wait(wait_time_wheel)
+                continue
             elif state == "ad_ask":
                 if have_battle_pass:
                     self.tap("lucky_wheel_start")
@@ -471,17 +436,11 @@ class CaveEngine(QObject):
             elif state == "devil_question":
                 self.tap("ability_daemon_reject")
             elif state == "angel_heal":
-                self.tap(
-                    "heal_right"
-                    if self.healingStrategy == HealingStrategy.AlwaysHeal
-                    else "heal_left"
-                )
+                self.tap("heal_right" if self.healingStrategy == HealingStrategy.AlwaysHeal else "heal_left")
             elif state == "on_pause":
                 self.tap("resume")
             elif state == "time_prize":
-                logger.info(
-                    "Collecting time prize and ending game. Unexpected behaviour but managed"
-                )
+                logger.info("Collecting time prize and ending game. Unexpected behaviour but managed")
                 self.tap("collect_time_prize")
                 self.wait(wait_time)
                 raise Exception("ended")
@@ -489,7 +448,6 @@ class CaveEngine(QObject):
                 raise Exception("ended")
             i += 1
             self.wait(wait_time)
-        return i
 
     def normal_lvl(self):
         self.goTroughDungeon()
@@ -508,9 +466,7 @@ class CaveEngine(QObject):
         self.wait(3)
         self.tap("ability_left")
         self.wait(2)
-        self.tap(
-            "spin_wheel_back"
-        )  # guard not to click on watch or buy stuff (armor or others)
+        self.tap("spin_wheel_back")  # guard not to click on watch or buy stuff (armor or others)
         self.wait(1)
         self.exit_dungeon_uncentered()
 
@@ -579,10 +535,7 @@ class CaveEngine(QObject):
             logger.info("level out of range: %d" % self.currentLevel)
             self._exitEngine()
         while self.currentLevel <= self.MAX_LEVEL:
-            logger.info(
-                "Level %d: %s"
-                % (self.currentLevel, str(self.levels_type[self.currentLevel]))
-            )
+            logger.info("Level %d: %s" % (self.currentLevel, str(self.levels_type[self.currentLevel])))
             if self.levels_type[self.currentLevel] == self.t_intro:
                 self.intro_lvl()
             elif self.levels_type[self.currentLevel] == self.t_normal:
@@ -645,13 +598,9 @@ class CaveEngine(QObject):
             self.wait(3)
         if self.currentLevel == 0:
             if self.UseManualStart:
-                a = input(
-                    "Press enter to start a game (your energy bar must be at least 5)"
-                )
+                a = input("Press enter to start a game (your energy bar must be at least 5)")
             else:
-                while (
-                    not self.SkipEnergyCheck
-                ) and not self.screen_connector.checkFrame("least_5_energy"):
+                while (not self.SkipEnergyCheck) and not self.screen_connector.checkFrame("least_5_energy"):
                     logger.info("No energy, waiting for one minute")
                     self.noEnergyLeft.emit()
                     self.wait(60)
@@ -663,9 +612,7 @@ class CaveEngine(QObject):
             if exc.args[0] == "ended":
                 logger.info("Game ended. Farmed a little bit...")
             elif exc.args[0] == "unable_exit_dungeon":
-                logger.info(
-                    "Unable to exit a room in a dungeon. Waiting instead of causing troubles"
-                )
+                logger.info("Unable to exit a room in a dungeon. Waiting instead of causing troubles")
                 self._exitEngine()
             elif exc.args[0] == "unknown_screen_state":
                 logger.info("Unknows screen state. Exiting instead of doing trouble")
@@ -674,9 +621,7 @@ class CaveEngine(QObject):
                 logger.info("Got an unknown exception: %s" % exc)
                 self._exitEngine()
         self.pressCloseEndIfEndedFrame()
-        self.statisctics_manager.saveOneGame(
-            self.start_date, self.stat_lvl_start, self.currentLevel
-        )
+        self.statisctics_manager.saveOneGame(self.start_date, self.stat_lvl_start, self.currentLevel)
 
     def pressCloseEndIfEndedFrame(self):
         if self.screen_connector.checkFrame("endgame"):

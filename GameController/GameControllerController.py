@@ -35,11 +35,7 @@ class GameControllerController(QObject):
         self.model.connectionStateChanged.connect(self.onConnectionChanged)
 
     def onConnectionChanged(self, conn):
-        if (
-            conn
-            and not self.controllerStates["play"]
-            and self.model.currentEngineState != EngineState.Playing
-        ):
+        if conn and not self.controllerStates["play"] and self.model.currentEngineState != EngineState.Playing:
             self.controllerStates["play"] = True
             self.onChangeEnableStatesButtons.emit(self.controllerStates)
         if not conn and self.controllerStates["play"]:

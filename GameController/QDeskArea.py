@@ -30,18 +30,14 @@ class QDeskArea(QWidget):
         super(QWidget, self).__init__()
         self.model = model
         self.controller = controller
-        self.scroll = (
-            QScrollArea()
-        )  # Scroll Area which contains the widgets, set as the centralWidget
+        self.scroll = QScrollArea()  # Scroll Area which contains the widgets, set as the centralWidget
         self.widget = QWidget()  # Widget that contains the collection of Vertical Box
-        self.box = (
-            QHBoxLayout()
-        )  # The H Box that contains the V Boxes of  labels and buttons
+        self.box = QHBoxLayout()  # The H Box that contains the V Boxes of  labels and buttons
         self.main_layout = QHBoxLayout()
         self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
         self.setStyleSheet("background-color: rgb(43, 43, 43)")
         self.chapersState = []
-        self.rows = 2
+        self.rows = 3
         self.initUI()
         self.initconnectors()
 
@@ -65,9 +61,7 @@ class QDeskArea(QWidget):
         button = QPushButton(self)
         button.setFixedSize(26, 26)
         button.setText("+")
-        button.setStyleSheet(
-            "background-color: (225,225,225); border-radius: 13px;text-align: center"
-        )
+        button.setStyleSheet("background-color: (225,225,225); border-radius: 13px;text-align: center")
         return button
 
     def resetCurrentDungeon(self):
@@ -86,13 +80,13 @@ class QDeskArea(QWidget):
             v_layouts.append(lay)
             self.box.addLayout(lay)
         for i, v in level_names.items():
-            object = QLevelState(self.model, self.controller, i, v)
-            object.setFixedSize(150, 300)
+            level_obj = QLevelState(self.model, self.controller, i, v)
+            level_obj.setFixedSize(100, 200)
             if i == self.model.engine.currentLevel:
-                object.SetState(PlayState.Playing)
-            self.chapersState.append(object)
-            v_layouts[i % line_elements].addWidget(object)
-            # self.box.addWidget(object)
+                level_obj.SetState(PlayState.Playing)
+            self.chapersState.append(level_obj)
+            v_layouts[i % line_elements].addWidget(level_obj)
+            # self.box.addWidget(level_obj)
         # self.insertMockupData()
         self.widget.setLayout(self.box)
 

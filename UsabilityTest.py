@@ -109,9 +109,7 @@ class UtilityTestController(QObject):
 
     def onTestStarted(self):
         self.currentQuestionIndex = 0
-        self.currentQuestionChanged.emit(
-            self.model.questions[self.currentQuestionIndex], self.currentQuestionIndex
-        )
+        self.currentQuestionChanged.emit(self.model.questions[self.currentQuestionIndex], self.currentQuestionIndex)
 
     def requestChangeSelectedLanguage(self, text):
         if text in self.model.languages:
@@ -175,9 +173,7 @@ class UtilityTestUi(QWidget):
         self.model.testStarted.connect(self.onTestStarted)
         self.controller.currentQuestionChanged.connect(self.onNewQuestionArrived)
         self.controller.testEnded.connect(self.onTestEnded)
-        self.cBoxLanguage.currentTextChanged.connect(
-            self.controller.requestChangeSelectedLanguage
-        )
+        self.cBoxLanguage.currentTextChanged.connect(self.controller.requestChangeSelectedLanguage)
         self.btnStart.clicked.connect(self.controller.requestStartTest)
 
     def onLanguageChanged(self, new_language):

@@ -1,4 +1,9 @@
 {
-    "python.formatting.blackPath": "/Users/fabriciopirini/.pyenv/versions/3.9.0/envs/archero_adb/bin/black",
-    "python.linting.flake8Path": "/Users/fabriciopirini/.pyenv/versions/3.9.0/envs/archero_adb/bin/flake8"
+    "python.formatting.blackPath": "/Users/fabriciopirini/.pyenv/versions/3.9.0/envs/archero_bot_57/bin/black",
+    "python.linting.flake8Path": "/Users/fabriciopirini/.pyenv/versions/3.9.0/envs/archero_bot_57/bin/flake8",
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Args": [
+        "max-line-length",
+        "120"
+    ]
 }

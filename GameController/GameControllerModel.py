@@ -29,12 +29,8 @@ class GameControllerModel(QObject):
         super(QObject, self).__init__()
         # Default data
         self.engine = CaveEngine()
-        self.engine.device_connector.setFunctionToCallOnConnectionStateChanged(
-            self.onDevConnChanged
-        )
-        self.engine.device_connector.setFunctionToCallOnCheckingConnectionStateChanged(
-            self.onDevCheckConnectionChanged
-        )
+        self.engine.device_connector.setFunctionToCallOnConnectionStateChanged(self.onDevConnChanged)
+        self.engine.device_connector.setFunctionToCallOnCheckingConnectionStateChanged(self.onDevCheckConnectionChanged)
         self.dict_buttons = "data.py"
         self.ch_images_path = "ui_chapters/"
         self.ch_image_ext = ".png"
@@ -99,9 +95,7 @@ class GameControllerModel(QObject):
         return self.chapters
 
     def getChapterImagePath(self, ch_number: int) -> str:
-        return os.path.join(
-            self.ch_images_path, "ch" + str(ch_number) + self.ch_image_ext
-        )
+        return os.path.join(self.ch_images_path, "ch" + str(ch_number) + self.ch_image_ext)
 
     def getChNumberFromString(self, ch_str) -> int:
         for i, ch in enumerate(self.chapters):

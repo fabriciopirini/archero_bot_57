@@ -59,14 +59,10 @@ class CoordinatesSelector(QWidget):
     def initSignals(self):
         self.controller.onCurrentShowAreaChanged.connect(self.onAreaStatechanged)
         self.btn_buttons.clicked.connect(
-            partial(
-                self.controller.showDifferentElemStateRequested, ShowAreaState.Buttons
-            )
+            partial(self.controller.showDifferentElemStateRequested, ShowAreaState.Buttons)
         )
         self.btn_movements.clicked.connect(
-            partial(
-                self.controller.showDifferentElemStateRequested, ShowAreaState.Movements
-            )
+            partial(self.controller.showDifferentElemStateRequested, ShowAreaState.Movements)
         )
         self.btn_checkpoints.clicked.connect(
             partial(

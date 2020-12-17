@@ -1,11 +1,17 @@
+import cv2
 from UsbConnector import UsbConnector
 import os
+import logging
+import time
 from Utils import (
     loadJsonData,
     saveJsonData_oneIndent,
     saveJsonData_twoIndent,
     buildDataFolder,
 )
+from image_text_detection import extract_text_from_image
+
+logger = logging.getLogger(__name__)
 
 
 class GameScreenConnector:
@@ -112,10 +118,7 @@ class GameScreenConnector:
             if not self.pixel_equals(attr_data[i], points_value[i], around=around):
                 equal = False
         if self.debug:
-            print(
-                "|-->         %s"
-                % ("  equal           <--|" if equal else "not equal         <--|")
-            )
+            print("|-->         %s" % ("  equal           <--|" if equal else "not equal         <--|"))
         if self.debug:
             print("-----------------------------------")
         return equal
@@ -157,20 +160,13 @@ class GameScreenConnector:
         elif coords_name in self.specific_checks_coords.keys():
             dict_to_take = self.specific_checks_coords
         else:
-            print(
-                "No coordinates called %s is saved in memory! Returning false."
-                % coords_name
-            )
+            print("No coordinates called %s is saved in memory! Returning false." % coords_name)
             return False
         if self.debug:
             print("Checking %s" % (coords_name))
         if frame is None:
             frame = self.getFrame()
-        around = (
-            2
-            if "around" not in dict_to_take[coords_name].keys()
-            else dict_to_take[coords_name]["around"]
-        )
+        around = 2 if "around" not in dict_to_take[coords_name].keys() else dict_to_take[coords_name]["around"]
         is_equal = self._check_screen_points_equal(
             frame,
             dict_to_take[coords_name]["coordinates"],
@@ -194,16 +190,10 @@ class GameScreenConnector:
         if frame is None:
             frame = self.getFrame()
         for k, v in self.static_coords.items():
-            around = (
-                2
-                if "around" not in self.static_coords[k].keys()
-                else self.static_coords[k]["around"]
-            )
+            around = 2 if "around" not in self.static_coords[k].keys() else self.static_coords[k]["around"]
             if self.debug:
                 print("Checking %s, around = %d" % (k, around))
-            result[k] = self._check_screen_points_equal(
-                frame, v["coordinates"], v["values"], around=around
-            )
+            result[k] = self._check_screen_points_equal(frame, v["coordinates"], v["values"], around=around)
         return result
 
     def getFrameState(self, frame=None) -> str:
@@ -213,21 +203,47 @@ class GameScreenConnector:
         :return:
         """
         state = "unknown"
-        if frame is None:
-            frame = self.getFrame()
-        for k, v in self.static_coords.items():
-            around = (
-                2
-                if "around" not in self.static_coords[k].keys()
-                else self.static_coords[k]["around"]
-            )
-            if self.debug:
-                print("Checking %s, around = %d" % (k, around))
-            if self._check_screen_points_equal(
-                frame, v["coordinates"], v["values"], around=around
-            ):
-                state = k
-                break
+        start_time = time.perf_counter()
+
+        os.system("adb exec-out screencap -p >  screen.png")
+        image = cv2.imread("screen.png")
+        extracted_text = extract_text_from_image(image).lower()
+
+        if "mysterious" in extracted_text and "vendor" in extracted_text:
+            return "mistery_vendor"
+        elif "angel" in extracted_text:
+            return "angel_heal"
+        elif "lucky" in extracted_text or "wheel" in extracted_text:
+            return "fortune_wheel"
+        elif "level" in extracted_text or "adventure" in extracted_text:
+            return "select_ability"
+        elif "special" in extracted_text or "reward" in extracted_text:
+            return "special_gift_respin"
+        elif "devil" in extracted_text:
+            return "devil_question"
+
+        end_time = time.perf_counter()
+        logger.info(f"OCR detection took {end_time-start_time:0.4f} seconds")
+
+        if state == "unknown":
+            start_time = time.perf_counter()
+            logger.info("Couldn't detect state. Falling back for Pixel matching...")
+
+            if frame is None:
+                frame = self.getFrame()
+            logger.info(f"self.static_coords.items(): {len(self.static_coords.items())}")
+            for k, v in self.static_coords.items():
+                around = 2 if "around" not in self.static_coords[k].keys() else self.static_coords[k]["around"]
+                if self.debug:
+                    print("Checking %s, around = %d" % (k, around))
+                if self._check_screen_points_equal(frame, v["coordinates"], v["values"], around=around):
+                    end_time = time.perf_counter()
+                    logger.info(f"Pixel detection took {end_time-start_time:0.4f} seconds")
+                    return k
+
+            end_time = time.perf_counter()
+            logger.info(f"Pixel detection failed in {end_time-start_time:0.4f} seconds")
+
         return state
 
     def _getHorLine(self, hor_line, frame):
@@ -364,9 +380,7 @@ class GameScreenConnector:
                 for j in range(window_width):
                     sum += 1 if masked_green[i - j][0] == high_pixel_color[0] else 0
                 for j in range(window_width):
-                    line[i - j] = (
-                        [0, 0, 0, 0] if sum < min_greens_pixels else high_pixel_color
-                    )
+                    line[i - j] = [0, 0, 0, 0] if sum < min_greens_pixels else high_pixel_color
                 i += window_width - 1  # Skip() and go to next window
             i += 1
         for i in range(window_width):  # Last 4 take black. no problem losing them
@@ -381,9 +395,7 @@ class GameScreenConnector:
         :return:
         """
         if line_name not in self.hor_lines:
-            print(
-                "Given line name '%s' is not a known horizontal line name." % line_name
-            )
+            print("Given line name '%s' is not a known horizontal line name." % line_name)
             return []
         return self._getHorLine(self.hor_lines[line_name], frame)
 
@@ -394,9 +406,7 @@ class GameScreenConnector:
             current_exp_bar = current_exp_bar[:min_len]
         changed = False
         for i in range(len(old_line_hor_bar)):
-            if not self.pixel_equals(
-                old_line_hor_bar[i], current_exp_bar[i], around=around
-            ):
+            if not self.pixel_equals(old_line_hor_bar[i], current_exp_bar[i], around=around):
                 changed = True
                 break
         return changed

@@ -9,9 +9,7 @@ def get_start_lvl_from_args():
             arg = sys.argv[1]
             start_lvl = int(arg)
             if start_lvl < 0 or start_lvl > 20:
-                print(
-                    "Given starting level is not a valid start level in [0,20]. Starting from zero"
-                )
+                print("Given starting level is not a valid start level in [0,20]. Starting from zero")
                 start_lvl = 0
         except:
             print("Given starting level is not a valid start level. Starting from zero")

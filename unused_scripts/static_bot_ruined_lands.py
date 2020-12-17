@@ -24,9 +24,7 @@ screen_connector = GameScreenConnector(width, heigth)
 
 
 def pixel_equals(px1, px2):
-    return (
-        px1[0] == px2[0] and px1[1] == px2[1] and px1[2] == px2[2] and px1[3] == px2[3]
-    )
+    return px1[0] == px2[0] and px1[1] == px2[1] and px1[2] == px2[2] and px1[3] == px2[3]
 
 
 # Those are normalized coordinates of data to be taken and trained into a simple nn to predict game status (multiclass)
@@ -113,9 +111,7 @@ buttons, x, y, movements = {}, 0, 0, {}
 def swipe(name, s):
     coord = movements[name]
     # convert back from normalized values
-    adb_swipe(
-        [coord[0] * width, coord[1] * heigth, coord[2] * width, coord[3] * heigth], s
-    )
+    adb_swipe([coord[0] * width, coord[1] * heigth, coord[2] * width, coord[3] * heigth], s)
 
 
 def tap(name):
@@ -162,9 +158,7 @@ def main():
     tap("menu_avatar_weapon")
     wait(1)
     frame = screen_connector.getFrame()
-    if screen_connector._check_screen_points_equal(
-        [[855 / 1080, 1576 / 2220]], [[231, 191, 105, 255]]
-    ):
+    if screen_connector._check_screen_points_equal([[855 / 1080, 1576 / 2220]], [[231, 191, 105, 255]]):
         tap("menu_equip_weapon")
         print("Removing armor...")
     else:
@@ -173,13 +167,9 @@ def main():
     tap("menu_world")
     while True:
         if UseManualStart:
-            a = input(
-                "Press enter to start a game (your energy bar must be at least 5)"
-            )
+            a = input("Press enter to start a game (your energy bar must be at least 5)")
         else:
-            while (not SkipEnergyCheck) and not screen_connector.checkFrame(
-                "least_5_energy"
-            ):
+            while (not SkipEnergyCheck) and not screen_connector.checkFrame("least_5_energy"):
                 print("No energy, waiting for one minute")
                 wait(60)
         chooseLands()
@@ -213,9 +203,7 @@ def getGeneratedData():
         method = import_method(data_pack, buttons_corrdinates_filename, "getButtons")
         return method()
     elif os.path.exists(os.path.join(data_pack, buttons_corrdinates_default_filename)):
-        method = import_method(
-            data_pack, buttons_corrdinates_default_filename, "getButtons"
-        )
+        method = import_method(data_pack, buttons_corrdinates_default_filename, "getButtons")
         return method()
     else:
         print(

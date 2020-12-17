@@ -31,9 +31,7 @@ class TouchManagerWindow(QWidget):
         self.controller = controller
 
         self.optionArea = ElementOption(self, self.controller, self.model)
-        self.controller.onCurrentShowAreaChanged.connect(
-            self.optionArea.areatypeChanged
-        )
+        self.controller.onCurrentShowAreaChanged.connect(self.optionArea.areatypeChanged)
         self.model.onButtonLocationChanged.connect(self.optionArea.onElementChanged)
 
         self.controller.onImagesChanged.connect(self.source_changed)
@@ -44,9 +42,7 @@ class TouchManagerWindow(QWidget):
 
         self.areaScroller = SwipableListWidget(self, controller, model)
 
-        self.controller.onElementSelectionChanged.connect(
-            self.areaScroller.onSelectionChanged
-        )
+        self.controller.onElementSelectionChanged.connect(self.areaScroller.onSelectionChanged)
         self.areaScroller.onElementClicked.connect(self.controller.elementSelectRequets)
         self.model.onPointAdded.connect(self.areaScroller.addElement)
         self.controller.onButtonsChanged.connect(self.areaScroller.onDictChanged)
@@ -56,12 +52,8 @@ class TouchManagerWindow(QWidget):
 
         self.screensScroller = SwipableListWidget(self, self.controller, self.model)
         self.model.onImageAdded.connect(self.screensScroller.addElement)
-        self.screensScroller.onElementClicked.connect(
-            self.controller.imageSelectRequets
-        )
-        self.controller.onImageSelectionChanged.connect(
-            self.screensScroller.onSelectionChanged
-        )
+        self.screensScroller.onElementClicked.connect(self.controller.imageSelectRequets)
+        self.controller.onImageSelectionChanged.connect(self.screensScroller.onSelectionChanged)
         self.controller.onImagesChanged.connect(self.screensScroller.onDictChanged)
 
         self.screensPathCbox = QComboBox()
@@ -92,9 +84,7 @@ class TouchManagerWindow(QWidget):
         self.screensPathCbox.addItems(k for k, v in self.model.screensFolders.items())
         self.screensPathCbox.setFixedHeight(20)
         self.screensPathCbox.setCurrentText(self.model.currentScreensFolder)
-        self.screensPathCbox.currentTextChanged.connect(
-            self.controller.requestScreenFolderChange
-        )
+        self.screensPathCbox.currentTextChanged.connect(self.controller.requestScreenFolderChange)
         lay_vertical_0.addWidget(self.screensPathCbox)
         self._setNoLayMargins(lay_vertical_0)
         lay_images_description = QHBoxLayout()
@@ -125,9 +115,7 @@ class TouchManagerWindow(QWidget):
         self.cBoxLineWidth.addItems([str(e) for e in self.model.linePermittedSizes])
         lay_vertical_1.addLayout(lay_top)
         self.cBoxLineWidth.setCurrentText(str(self.model.currentLineWidth))
-        self.cBoxLineWidth.currentIndexChanged.connect(
-            self.controller.requestChangeLineWidth
-        )
+        self.cBoxLineWidth.currentIndexChanged.connect(self.controller.requestChangeLineWidth)
 
         self.photo.setText("")
         self.photo.setAlignment(Qt.AlignCenter)
@@ -195,13 +183,9 @@ class TouchManagerWindow(QWidget):
             self.add_point_btn.setText("add swipe")
             self.areaOptionDescription.setText("Selected swipe start and end coords.")
         elif new_state == ShowAreaState.FrameCheck:
-            self.areaDescriptionLbl.setText(
-                "List of static frame states with coordinates."
-            )
+            self.areaDescriptionLbl.setText("List of static frame states with coordinates.")
             self.add_point_btn.setText("add frame")
-            self.areaOptionDescription.setText(
-                "Selected static frame list of check coords."
-            )
+            self.areaOptionDescription.setText("Selected static frame list of check coords.")
         self.areaScroller.onDictChanged(self.controller.dataFromAreaType())
 
     def sourceChanged(self, new_image_files):
@@ -225,9 +209,7 @@ class TouchManagerWindow(QWidget):
 
     def acquire_screen(self):
         if self.model.is_device_connected():
-            text, ok = QInputDialog.getText(
-                self, "Get name", "Screenshot name:", QLineEdit.Normal, ""
-            )
+            text, ok = QInputDialog.getText(self, "Get name", "Screenshot name:", QLineEdit.Normal, "")
             if ok and text != "":
                 self.model.acquire_screen(text)
         else:
@@ -238,10 +220,7 @@ class TouchManagerWindow(QWidget):
         self.screensPathCbox.blockSignals(True)
         self.screensPathCbox.setCurrentText(newfolder)
         self.screensPathCbox.blockSignals(False)
-        self.export_btn.setToolTip(
-            "Saves current buttons, movements, framechecks in %s data folder"
-            % newfolder
-        )
+        self.export_btn.setToolTip("Saves current buttons, movements, framechecks in %s data folder" % newfolder)
 
     def source_changed(self, current_files):
         self.photo.clear()
@@ -273,24 +252,17 @@ class TouchManagerWindow(QWidget):
                         if i == self.controller.selectedCoordinateIndex:
                             current_locs = location
                         else:
-                            self.DrawLines(
-                                pixmap, location, self.model.ui_lines_color_rgb
-                            )
+                            self.DrawLines(pixmap, location, self.model.ui_lines_color_rgb)
                 if len(current_locs) > 0:
-                    self.DrawLines(
-                        pixmap, current_locs, self.model.ui_lines_color_rgb_selected
-                    )
-            pixmap = pixmap.scaled(
-                self.photo.width(), self.photo.height(), Qt.KeepAspectRatio
-            )
+                    self.DrawLines(pixmap, current_locs, self.model.ui_lines_color_rgb_selected)
+            pixmap = pixmap.scaled(self.photo.width(), self.photo.height(), Qt.KeepAspectRatio)
             self.current_image_resized = [pixmap.width(), pixmap.height()]
             self.photo.setPixmap(pixmap)
             self.photo.mousePressEvent = self.getPixelValue
 
     def getPixelValue(self, event):
         x1 = (
-            event.pos().x()
-            - (self.label_photo_fixed_size[0] - self.current_image_resized[0]) / 2
+            event.pos().x() - (self.label_photo_fixed_size[0] - self.current_image_resized[0]) / 2
         ) / self.current_image_resized[0]
         y1 = (event.pos().y()) / self.current_image_resized[1]
         self.controller.requestChangeCoordinate(x1, y1)

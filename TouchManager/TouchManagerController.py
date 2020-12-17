@@ -55,9 +55,7 @@ class TouchManagerController(QObject):
         self.initConnectors()
 
     def initConnectors(self):
-        self.model.onDictionaryTapsChanged.connect(
-            partial(self.onGeneralDictionaryChanged, ShowAreaState.Buttons)
-        )
+        self.model.onDictionaryTapsChanged.connect(partial(self.onGeneralDictionaryChanged, ShowAreaState.Buttons))
         self.model.onDictionaryMovementsChanged.connect(
             partial(self.onGeneralDictionaryChanged, ShowAreaState.Movements)
         )
@@ -71,9 +69,7 @@ class TouchManagerController(QObject):
         self.model.changeFrameCheckColor(
             self.dict_selected,
             index,
-            self._getPixelFromCoord(
-                self.model.currentFrameChecks[self.dict_selected]["coordinates"][index]
-            ),
+            self._getPixelFromCoord(self.model.currentFrameChecks[self.dict_selected]["coordinates"][index]),
         )
 
     def rquestFrameCheckCoordinateColorManualChange(self, index):
@@ -97,9 +93,7 @@ class TouchManagerController(QObject):
         if self.currentAreaType != ShowAreaState.FrameCheck or self.dict_selected == "":
             return []
         colors = []
-        for i, coord in enumerate(
-            self.model.currentFrameChecks[self.dict_selected]["coordinates"]
-        ):
+        for i, coord in enumerate(self.model.currentFrameChecks[self.dict_selected]["coordinates"]):
             c = self._getPixelFromCoord(coord)
             colors.append(c)
         return colors
@@ -117,9 +111,7 @@ class TouchManagerController(QObject):
             self.model.changeCurrentLineWidth(index)
 
     def requestAddPoint(self):
-        name, ok = QInputDialog.getText(
-            QWidget(), "Get name", "Point name:", QLineEdit.Normal, ""
-        )
+        name, ok = QInputDialog.getText(QWidget(), "Get name", "Point name:", QLineEdit.Normal, "")
         if ok and name != "":
             if name not in self.dataFromAreaType().keys():
                 if self.currentAreaType == ShowAreaState.Buttons:
@@ -172,16 +164,12 @@ class TouchManagerController(QObject):
         if self.dict_selected == "":
             return
         if self.currentAreaType == ShowAreaState.Buttons:
-            self.currentCoordinates = [
-                self.dataFromAreaType()[self.dict_selected].copy()
-            ]
+            self.currentCoordinates = [self.dataFromAreaType()[self.dict_selected].copy()]
         if self.currentAreaType == ShowAreaState.Movements:
             self.currentCoordinates = self.dataFromAreaType()[self.dict_selected].copy()
         if self.currentAreaType == ShowAreaState.FrameCheck:
             self.currentCoordinates = self.dataFromAreaType()[self.dict_selected].copy()
-            self.currentCoordinates[
-                "currentScreenColors"
-            ] = self._getCurrentImageCoordsColors()
+            self.currentCoordinates["currentScreenColors"] = self._getCurrentImageCoordsColors()
 
     def elementSelectRequets(self, btn_name):
         self.dict_selected = btn_name
@@ -195,13 +183,8 @@ class TouchManagerController(QObject):
             self.image_selected = image_name
             self.requestLoadPixamp()
             self.updatecurrentCoordinate()
-            if (
-                self.dict_selected != ""
-                and self.currentAreaType == ShowAreaState.FrameCheck
-            ):
-                self.onCurrentScreenColorsChanged.emit(
-                    self.currentCoordinates["currentScreenColors"]
-                )
+            if self.dict_selected != "" and self.currentAreaType == ShowAreaState.FrameCheck:
+                self.onCurrentScreenColorsChanged.emit(self.currentCoordinates["currentScreenColors"])
             self.onImageSelectionChanged.emit(self.image_selected)
 
     def nextImageSelectRequest(self):
@@ -230,13 +213,9 @@ class TouchManagerController(QObject):
         if self.currentAreaType == ShowAreaState.Buttons:
             self.model.changeButtonPosition(self.dict_selected, [x1, y1])
         elif self.currentAreaType == ShowAreaState.Movements:
-            self.model.changeMovementPosition(
-                self.dict_selected, [x1, y1], self.selectedCoordinateIndex
-            )
+            self.model.changeMovementPosition(self.dict_selected, [x1, y1], self.selectedCoordinateIndex)
         elif self.currentAreaType == ShowAreaState.FrameCheck:
-            self.model.changeFrameCheckPosition(
-                self.dict_selected, [x1, y1], self.selectedCoordinateIndex
-            )
+            self.model.changeFrameCheckPosition(self.dict_selected, [x1, y1], self.selectedCoordinateIndex)
 
     def requestChangeAround(self, around: int):
         if around >= 0:

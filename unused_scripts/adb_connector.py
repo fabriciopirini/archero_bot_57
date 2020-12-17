@@ -10,9 +10,7 @@ This script uses os.system and os.popen to run commands through a shell. Try use
 
 def get_device_id():
     try:
-        device = (
-            os.popen("adb devices").read().split("\n", 1)[1].split("device")[0].strip()
-        )
+        device = os.popen("adb devices").read().split("\n", 1)[1].split("device")[0].strip()
         device = None if device == "" else device
         return device
     except:
@@ -54,13 +52,8 @@ def adb_swipe(locations, s):
     """
     s = int(s * 1000)
     x1, y1, x2, y2 = locations[0], locations[1], locations[2], locations[3]
-    print(
-        "Swiping from (%d, %d) --> (%d, %d) in %d"
-        % (int(x1), int(y1), int(x2), int(y2), s)
-    )
-    os.system(
-        "adb shell input swipe %d %d %d %d %d" % (int(x1), int(y1), int(x2), int(y2), s)
-    )
+    print("Swiping from (%d, %d) --> (%d, %d) in %d" % (int(x1), int(y1), int(x2), int(y2), s))
+    os.system("adb shell input swipe %d %d %d %d %d" % (int(x1), int(y1), int(x2), int(y2), s))
 
 
 def adb_tap(coord):

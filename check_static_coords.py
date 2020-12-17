@@ -51,11 +51,7 @@ for file in files:
         computed = [k for k, v in complete_frame.items() if v]
         sum = len(computed)
         ok = False
-        exergy_print = (
-            ""
-            if not screen_conector.checkFrame("least_5_energy", frame)
-            else " + least_5_energy"
-        )
+        exergy_print = "" if not screen_conector.checkFrame("least_5_energy", frame) else " + least_5_energy"
         if sum == 0:
             print("NO_DETECTION - %s %s" % (file, exergy_print))
         elif sum == 1:
@@ -63,16 +59,11 @@ for file in files:
             ok = True
         else:
             ones_name_purged_singular = [
-                k
-                for k in computed
-                if len(screen_conector.static_coords[k]["coordinates"]) > 1
+                k for k in computed if len(screen_conector.static_coords[k]["coordinates"]) > 1
             ]
             removed = [k for k in computed if k not in ones_name_purged_singular]
             if len(ones_name_purged_singular) == 0:
-                print(
-                    "MUL_DETECTIONS %s: %s %s"
-                    % (file, ", ".join(computed), exergy_print)
-                )
+                print("MUL_DETECTIONS %s: %s %s" % (file, ", ".join(computed), exergy_print))
             elif len(ones_name_purged_singular) == 1:
                 print(
                     "OK - %s: %s. Extra detected singulars: %s %s"
@@ -85,10 +76,7 @@ for file in files:
                 )
                 ok = True
             else:
-                print(
-                    "MUL_DETECTIONS %s: %s %s"
-                    % (file, ", ".join(ones_name_purged_singular), exergy_print)
-                )
+                print("MUL_DETECTIONS %s: %s %s" % (file, ", ".join(ones_name_purged_singular), exergy_print))
         all_ok = all_ok and ok
 
 if all_ok:

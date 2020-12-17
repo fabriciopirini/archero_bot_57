@@ -8,9 +8,7 @@ from GameController.GameControllerModel import GameControllerModel, EngineState
 class QLevelViewer(QWidget):
     onLevelClicked = pyqtSignal()
 
-    def __init__(
-        self, model: GameControllerModel, level_num=0, level_name=None, parent=QWidget
-    ):
+    def __init__(self, model: GameControllerModel, level_num=0, level_name=None, parent=QWidget):
         super(QWidget, self).__init__()
         self.model = model
         self.lblNumber = QLabel()
@@ -80,7 +78,7 @@ class QLevelViewer(QWidget):
 
     def _setupUI(self):
         self.frame.setAttribute(QtCore.Qt.WA_StyledBackground, True)
-        self.frame.setFixedSize(80, 80)
+        self.frame.setFixedSize(60, 60)
         self.frame.setGeometry(0, 0, 0, 0)
         self.frame.mousePressEvent = self.onSelfClicked
         font = QtGui.QFont()
@@ -105,6 +103,4 @@ class QLevelViewer(QWidget):
         self.model.engineStatechanged.connect(self.onPlayStateChanged)
 
     def onPlayStateChanged(self, newState: EngineState):
-        self.updateClickableUi(
-            self.isClickable and (not newState == EngineState.Playing)
-        )
+        self.updateClickableUi(self.isClickable and (not newState == EngineState.Playing))

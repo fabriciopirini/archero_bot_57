@@ -51,13 +51,7 @@ class UsbConnector(object):
 
     def getDeviceSerialNo(self):
         try:
-            device = (
-                os.popen("adb devices")
-                .read()
-                .split("\n", 1)[1]
-                .split("device")[0]
-                .strip()
-            )
+            device = os.popen("adb devices").read().split("\n", 1)[1].split("device")[0].strip()
             device = None if device == "" else device
             return device
         except:
