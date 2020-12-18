@@ -1,24 +1,14 @@
 from functools import partial
 
-from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtGui import QPixmap, QColor
 from PyQt5.QtWidgets import (
-    QHBoxLayout,
-    QBoxLayout,
-    QVBoxLayout,
-    QPushButton,
     QWidget,
-    QScrollArea,
-    QLabel,
-    QFormLayout,
-    QGridLayout,
     QLineEdit,
     QInputDialog,
     QColorDialog,
 )
-from PyQt5 import QtCore
-from PyQt5.QtCore import Qt, QSize, pyqtSignal, QObject
-from PyQt5 import QtWidgets, uic
+from PyQt5.QtCore import pyqtSignal, QObject
+from PyQt5 import QtWidgets
 from TouchManager.TouchManagerModel import TouchManagerModel
 import enum
 import os

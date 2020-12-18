@@ -1,19 +1,9 @@
-from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import (
     QHBoxLayout,
-    QBoxLayout,
-    QVBoxLayout,
-    QPushButton,
     QWidget,
-    QScrollArea,
-    QLabel,
-    QFormLayout,
-    QGridLayout,
 )
 from PyQt5 import QtCore
-from PyQt5.QtCore import Qt, QSize, pyqtSignal
-from PyQt5 import QtWidgets, uic
-from QMyWidgets.QLevelState import QLevelState, PlayState
+from PyQt5.QtCore import Qt
 from GameController.GameControllerController import GameControllerController
 from GameController.GameControllerModel import GameControllerModel
 from QMyWidgets.QDarkButton import QDarkButton
@@ -22,7 +12,6 @@ from QMyWidgets.QDarkButton import QDarkButton
 class QDungeonController(QWidget):
     def __init__(
         self,
-        parent: QWidget,
         controller: GameControllerController,
         model: GameControllerModel,
     ):

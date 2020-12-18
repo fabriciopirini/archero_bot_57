@@ -1,18 +1,4 @@
-from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtWidgets import (
-    QHBoxLayout,
-    QBoxLayout,
-    QVBoxLayout,
-    QPushButton,
-    QWidget,
-    QScrollArea,
-    QLabel,
-    QFormLayout,
-    QGridLayout,
-)
-from PyQt5 import QtCore
-from PyQt5.QtCore import Qt, QSize, pyqtSignal, QObject
-from PyQt5 import QtWidgets, uic
+from PyQt5.QtCore import pyqtSignal, QObject
 from GameController.GameControllerModel import GameControllerModel, EngineState
 
 

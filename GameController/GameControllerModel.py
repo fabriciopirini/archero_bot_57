@@ -1,9 +1,6 @@
 import os
-from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtCore import pyqtSignal, QObject, QThread
+from PyQt5.QtCore import pyqtSignal, QObject
 from CaveDungeonEngine import CaveEngine
-import time
-from UsbConnector import UsbConnector
 from WorkerThread import WorkerThread
 import logging
 import enum
@@ -23,9 +20,6 @@ class GameControllerModel(QObject):
     checkConnectionStateChanged = pyqtSignal(bool)
     resolutionChanged = pyqtSignal(str)
     dataFolderChanged = pyqtSignal(str)
-
-    # onButtonLocationChanged = pyqtSignal(str)
-    # onImageSelected = pyqtSignal()
 
     def __init__(self):
         super(QObject, self).__init__()

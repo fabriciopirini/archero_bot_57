@@ -1,6 +1,6 @@
 from PyQt5.QtGui import QPainter, QPen, QBrush, QColor
-from PyQt5 import QtGui, QtWidgets
-from PyQt5.QtCore import Qt, pyqtSignal, QMetaObject
+from PyQt5 import QtWidgets
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
     QHBoxLayout,
     QVBoxLayout,
@@ -11,7 +11,6 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QComboBox,
     QWidget,
-    QSpacerItem,
     QFrame,
     QGridLayout,
 )
@@ -188,7 +187,7 @@ class TouchManagerWindow(QWidget):
             self.areaOptionDescription.setText("Selected static frame list of check coords.")
         self.areaScroller.onDictChanged(self.controller.dataFromAreaType())
 
-    def sourceChanged(self, new_image_files):
+    def sourceChanged(self):
         self.controller.current_image_size = [0, 0]
         self.current_image_resized = [0, 0]
 
@@ -204,7 +203,7 @@ class TouchManagerWindow(QWidget):
     def clearWidget(self, widget: QWidget):
         widget.setParent(None)
 
-    def onLineWidthChanged(self, new_width):
+    def onLineWidthChanged(self):
         self.update_image_draw()
 
     def acquire_screen(self):
@@ -222,7 +221,7 @@ class TouchManagerWindow(QWidget):
         self.screensPathCbox.blockSignals(False)
         self.export_btn.setToolTip("Saves current buttons, movements, framechecks in %s data folder" % newfolder)
 
-    def source_changed(self, current_files):
+    def source_changed(self):
         self.photo.clear()
 
     def dict_changed(self):

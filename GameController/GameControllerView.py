@@ -1,25 +1,16 @@
-from PyQt5.QtGui import QResizeEvent
-
 from GameController.GameControllerModel import GameControllerModel, EngineState
-from PyQt5 import QtGui, QtWidgets
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
     QHBoxLayout,
     QVBoxLayout,
-    QPushButton,
-    QScrollArea,
     QLabel,
-    QFormLayout,
     QMainWindow,
-    QInputDialog,
     QGridLayout,
     QWidget,
-    QSpacerItem,
     QComboBox,
 )
-import os
 from GameController.QToolboxActions import QToolboxActions
-from GameController.QToolboxRun import QToolboxRun
 from GameController.QDeskArea import QDeskArea
 from GameController.QDungeonControl import QDungeonController
 from GameController.GameControllerController import GameControllerController
@@ -37,15 +28,14 @@ class GameControllerWindow(QWidget):
         self.main_layout = QGridLayout()
         self.toolbarOptions = QVBoxLayout()
         self.dungeonSelector = QDungeonSelector(self, controller, model)
-        # self.widRun = QToolboxRun(self)
         self.currentLevelWidget = QLevelViewer(self.model, 0)
         self.widActions = QToolboxActions(self)
         self.size_info_lbl = QLabel("Screen size:\n1x1")
         self.lblDataFolder = QLabel()
         self.lblConnectionStatus = QLabel()
         self.lblCheckConnectionStatus = QLabel()
-        self.controlWidget = QDungeonController(self, controller, model)
-        self.content_wid = QDeskArea(self, controller, model)  # QtWidgets.QWidget()
+        self.controlWidget = QDungeonController(controller, model)
+        self.content_wid = QDeskArea(controller, model)  # QtWidgets.QWidget()
         self.infoLabel = QLabel()
         self.cBoxhealStrategy = QComboBox()
         self.lblInfoHealStrategy = QLabel()

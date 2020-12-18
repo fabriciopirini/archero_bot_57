@@ -3,20 +3,13 @@ from functools import partial
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import (
     QHBoxLayout,
-    QBoxLayout,
     QVBoxLayout,
-    QPushButton,
     QWidget,
-    QScrollArea,
     QLabel,
-    QFormLayout,
-    QGridLayout,
     QRadioButton,
 )
-from PyQt5 import QtCore
-from PyQt5.QtCore import Qt, QSize, pyqtSignal, QObject
-from PyQt5 import QtWidgets, uic
-from QMyWidgets.QLevelState import QLevelState, PlayState
+from PyQt5.QtCore import QObject
+from PyQt5 import QtWidgets
 from TouchManager.TouchManagerController import TouchManagerController
 from TouchManager.TouchManagerModel import TouchManagerModel
 

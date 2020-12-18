@@ -1,3 +1,7 @@
+import os
+
+import cv2
+from image_text_detection import extract_energy
 import time
 import logging
 from datetime import datetime
@@ -7,8 +11,6 @@ from GameScreenConnector import GameScreenConnector
 from StatisticsManager import StatisticsManager
 from Utils import (
     loadJsonData,
-    saveJsonData_oneIndent,
-    saveJsonData_twoIndent,
     readAllSizesFolders,
     buildDataFolder,
     getCoordFilePath,
@@ -40,7 +42,7 @@ class CaveEngine(QObject):
     playtime = 70
     # Set this to true if you want to use generated data with TouchManager. Uses below coordinates path
     UseGeneratedData = False
-    # Set this to true if keep receiving "No energy, wqiting for one minute"
+    # Set this to true if keep receiving "No energy, waiting for one minute"
     UseManualStart = False
     # Set this to true if want to automatically check for energy
     SkipEnergyCheck = False
@@ -165,13 +167,6 @@ class CaveEngine(QObject):
         logger.info("New resolution set: %dx%d" % (self.width, self.heigth))
         self.resolutionChanged.emit(w, h)
 
-    def __unused__initConnection(self):
-        device = self.device_connector._get_device_id()
-        if device is None:
-            logger.info("Error: no device discovered. Start adb server before executing this.")
-            exit(1)
-        logger.info("Usb debugging device: %s" % device)
-
     def swipe_points(self, start, stop, s):
         start = self.buttons[start]
         stop = self.buttons[stop]
@@ -222,13 +217,7 @@ class CaveEngine(QObject):
             exit()
         time.sleep(decimal)
 
-    def exit_dungeon_uncentered(self):
-        if self.currentDungeon == 3:
-            self.exit_dungeon_uncentered_new()
-        else:
-            self.exit_dungeon_uncentered_new()
-
-    def exit_dungeon_uncentered_new(self, second_check=True):
+    def exit_dungeon_uncentered(self, second_check=True):
         # Center
         _, direction = self.screen_connector.get_player_decentering()
         self.wait(0.5)
@@ -244,29 +233,8 @@ class CaveEngine(QObject):
             self.swipe("n", 2)
         if second_check and self.screen_connector.get_frame_state() != "in_game":
             self.reactGamePopups()
-            self.exit_dungeon_uncentered_new(False)
+            self.exit_dungeon_uncentered(False)
         self.wait(1)  # Safety wait for extra check
-
-    def exit_dungeon_uncentered_old(self):
-        self.wait(2)
-        upper_line = self.screen_connector.get_horizontal_line("hor_up_line")
-        logger.info("Going trough door to exit...")
-        self.wait(1)
-        self.swipe("n", 2)
-        self.wait(2)
-        if not self.screen_connector.check_upper_line_has_changed(upper_line):
-            logger.info("Not exiting, trying right...")
-            self.wait(1)
-            self.swipe("ne", 3)
-            self.wait(2)
-            if not self.screen_connector.check_upper_line_has_changed(upper_line):
-                logger.info("Not exiting, trying left...")
-                self.wait(1)
-                self.swipe("nw", 4)
-                self.wait(2)
-                if not self.screen_connector.check_upper_line_has_changed(upper_line):
-                    raise Exception("unable_exit_dungeon")
-        logger.info("Exit level")
 
     def goTroughDungeon10(self):
         logger.info("Going through dungeon (designed for #10)")
@@ -572,38 +540,45 @@ class CaveEngine(QObject):
         self.tap("start")
         self.wait(3)
 
-    def quick_test_functions(self):
-        pass
-
     def start_infinite_play(self):
-        # Only for test purposes on pressing play
-        # self.quick_test_functions()
         while True:
             self.start_one_game()
             self.currentLevel = 0
 
+    def enough_energy(self, min_energy=5):
+        os.system("adb exec-out screencap -p >  screen.png")
+        image = cv2.imread("screen.png")
+
+        energy = extract_energy(image)
+
+        return True if energy >= min_energy else False
+
     def start_one_game(self):
+        delay_energy_check = 30
+
         self.start_date = datetime.now()
         self.stat_lvl_start = self.currentLevel
         self.stopRequested = False
         self.screen_connector.stopRequested = False
+
         logger.info("New game. Starting from level %d" % self.currentLevel)
         self.wait(2)
-        if self.screen_connector.check_frame("time_prize"):
-            logger.info("Collecting time prize")
-            self.tap("resume")
-            self.wait(3)
         if self.currentLevel == 0:
             if self.UseManualStart:
-                a = input("Press enter to start a game (your energy bar must be at least 5)")
+                input("Press any key to start a game (your energy bar must be at least 5)")
             else:
-                while (not self.SkipEnergyCheck) and not self.screen_connector.check_frame("least_5_energy"):
-                    logger.info("No energy, waiting for one minute")
+                while not self.SkipEnergyCheck and not self.enough_energy(5):
+                    logger.info(f"No energy, waiting for {delay_energy_check}s")
                     self.noEnergyLeft.emit()
-                    self.wait(60)
+                    self.wait(delay_energy_check)
             self.chooseCave()
         try:
+            start_time = time.perf_counter()
+
             self.play_cave()
+
+            end_time = time.perf_counter()
+            logger.info(f"This play took {end_time-start_time:0.4f} seconds")
         except Exception as exc:
             self.pressCloseEndIfEndedFrame()
             if exc.args[0] == "ended":

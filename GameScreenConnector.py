@@ -166,12 +166,9 @@ class GameScreenConnector:
             print("Checking %s" % (coords_name))
         if frame is None:
             frame = self.get_frame()
-        around = 2 if "around" not in dict_to_take[coords_name].keys() else dict_to_take[coords_name]["around"]
+        around = dict_to_take[coords_name].get("around", 2)
         is_equal = self._check_screen_points_equal(
-            frame,
-            dict_to_take[coords_name]["coordinates"],
-            dict_to_take[coords_name]["values"],
-            around=around,
+            frame, dict_to_take[coords_name]["coordinates"], dict_to_take[coords_name]["values"], around=around
         )
         return is_equal
 
@@ -190,7 +187,7 @@ class GameScreenConnector:
         if frame is None:
             frame = self.get_frame()
         for k, v in self.static_coords.items():
-            around = 2 if "around" not in self.static_coords[k].keys() else self.static_coords[k]["around"]
+            around = self.static_coords[k].get("around", 2)
             if self.debug:
                 print("Checking %s, around = %d" % (k, around))
             result[k] = self._check_screen_points_equal(frame, v["coordinates"], v["values"], around=around)
@@ -200,7 +197,7 @@ class GameScreenConnector:
         if frame is None:
             frame = self.get_frame()
         for k, v in self.static_coords.items():
-            around = 2 if "around" not in self.static_coords[k].keys() else self.static_coords[k]["around"]
+            around = self.static_coords[k].get("around", 2)
             if self.debug:
                 print("Checking %s, around = %d" % (k, around))
             if self._check_screen_points_equal(frame, v["coordinates"], v["values"], around=around):
@@ -208,10 +205,18 @@ class GameScreenConnector:
         return "unknown"
 
     def define_state_by_ocr(self) -> str:
+        min_energy = 5
+
         os.system("adb exec-out screencap -p >  screen.png")
         image = cv2.imread("screen.png")
-        extracted_text = extract_text_from_image(image).lower()
-        logger.debug(f"Text extracted: {extracted_text}")
+        extracted_from_image = extract_text_from_image(image)
+
+        extracted_text = extracted_from_image.get("text", "")
+        params = extracted_from_image.get("params", {})
+        energy_text = params.get("energy", "")
+        energy = energy_text.split("/")[0] if energy_text else None
+
+        logger.debug(f"Text extracted: {extracted_text}, Energy: {energy}")
 
         if "in_game" in extracted_text:
             return "in_game"
@@ -229,6 +234,8 @@ class GameScreenConnector:
             return "devil_question"
         elif "game over" in extracted_text:
             return "endgame"
+        # elif "bones" in extracted_text and energy >= min_energy:
+        #     return ""
 
         return "unknown"
 
@@ -292,6 +299,14 @@ class GameScreenConnector:
                 masked_yellow.append([0, 0, 0, 0])
         return masked_yellow
 
+    def filter_raw_hp_line_window(self, line):
+        """
+        Given a horizontal array of pixels RGBA, filter data in order to obtain position of character based on his HP.
+        """
+        # Filter outlayers:
+        first_filter = self.remove_outlayers_in_line(line, self.green_hp)
+        return first_filter
+
     def filter_line_by_color(self, line):
         masked_green = []
         for px in line:
@@ -337,15 +352,36 @@ class GameScreenConnector:
     def get_player_decentering(self) -> Tuple[int, str]:
         line = self.get_line_hp_bar()
         line = self.filter_line_by_color(line)
-        line_filtered = self.filterRawHpLine_window(line)
+        line_filtered = self.filter_raw_hp_line_window(line)
 
         center_diff = self.get_player_decentering_by_max_green_group(line_filtered)
         if abs(center_diff) < (self.door_width * self.width) / 4.0:
             direction = "center"
         else:
             direction = "right" if center_diff < 0 else "left"
-        logger.info("Character on the %s side by %dpx" % (direction, abs(center_diff)))
+        logger.debug("Character on the %s side by %dpx" % (direction, abs(center_diff)))
         return center_diff, direction
+
+    def remove_outlayers_in_line(self, masked_green, high_pixel_color):
+        line = masked_green.copy()
+        n = len(line)
+        i = 0
+        window_width = 15
+        min_greens_pixels = 9
+        while i < n:
+            if i in range(window_width):  # First 4 take black. no problem losing them
+                line[i] = [0, 0, 0, 0]
+            else:
+                counter = 0
+                for j in range(window_width):
+                    counter += 1 if masked_green[i - j][0] == high_pixel_color[0] else 0
+                for j in range(window_width):
+                    line[i - j] = [0, 0, 0, 0] if counter < min_greens_pixels else high_pixel_color
+                i += window_width - 1  # Skip() and go to next window
+            i += 1
+        for i in range(window_width):  # Last 4 take black. no problem losing them
+            line[n - i - 1] = [0, 0, 0, 0]
+        return line
 
     def get_line_hp_bar(self, frame: Frame = None):
         """
