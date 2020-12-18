@@ -1,6 +1,10 @@
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QHBoxLayout, QBoxLayout, QVBoxLayout, QPushButton, QWidget
 from PyQt5 import QtCore
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QBoxLayout
+from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QWidget
 
 
 class QToolboxRun(QWidget):

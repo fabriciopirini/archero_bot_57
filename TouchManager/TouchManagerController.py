@@ -1,17 +1,18 @@
-from functools import partial
-
-from PyQt5.QtGui import QPixmap, QColor
-from PyQt5.QtWidgets import (
-    QWidget,
-    QLineEdit,
-    QInputDialog,
-    QColorDialog,
-)
-from PyQt5.QtCore import pyqtSignal, QObject
-from PyQt5 import QtWidgets
-from TouchManager.TouchManagerModel import TouchManagerModel
 import enum
 import os
+from functools import partial
+
+from PyQt5 import QtWidgets
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import QObject
+from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QColorDialog
+from PyQt5.QtWidgets import QInputDialog
+from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QWidget
+
+from TouchManager.TouchManagerModel import TouchManagerModel
 
 
 class ShowAreaState(enum.Enum):

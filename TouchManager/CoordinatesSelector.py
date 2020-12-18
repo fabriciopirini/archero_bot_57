@@ -1,14 +1,13 @@
 from functools import partial
 
-from PyQt5.QtWidgets import (
-    QHBoxLayout,
-    QPushButton,
-    QWidget,
-)
 from PyQt5 import QtCore
+from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QWidget
+
+from TouchManager.TouchManagerController import ShowAreaState
 from TouchManager.TouchManagerController import TouchManagerController
 from TouchManager.TouchManagerModel import TouchManagerModel
-from TouchManager.TouchManagerController import ShowAreaState
 
 
 class CoordinatesSelector(QWidget):

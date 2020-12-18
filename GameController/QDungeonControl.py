@@ -1,9 +1,8 @@
-from PyQt5.QtWidgets import (
-    QHBoxLayout,
-    QWidget,
-)
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QWidget
+
 from GameController.GameControllerController import GameControllerController
 from GameController.GameControllerModel import GameControllerModel
 from QMyWidgets.QDarkButton import QDarkButton

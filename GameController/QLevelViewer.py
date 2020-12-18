@@ -1,8 +1,17 @@
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5 import QtCore
+from PyQt5 import QtGui
+from PyQt5 import QtWidgets
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import QFrame, QLabel, QVBoxLayout, QHBoxLayout, QWidget
-from PyQt5 import QtCore, QtGui, QtWidgets
-from GameController.GameControllerModel import GameControllerModel, EngineState
+from PyQt5.QtWidgets import QFrame
+from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QWidget
+
+from GameController.GameControllerModel import EngineState
+from GameController.GameControllerModel import GameControllerModel
 
 
 class QLevelViewer(QWidget):

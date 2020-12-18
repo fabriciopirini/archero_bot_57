@@ -1,5 +1,6 @@
-from CaveDungeonEngine import CaveEngine
 import sys
+
+from CaveDungeonEngine import CaveEngine
 
 
 def get_start_lvl_from_args():

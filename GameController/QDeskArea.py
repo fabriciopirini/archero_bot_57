@@ -1,17 +1,17 @@
 import math
 
-from PyQt5.QtWidgets import (
-    QHBoxLayout,
-    QVBoxLayout,
-    QPushButton,
-    QWidget,
-    QScrollArea,
-)
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
-from QMyWidgets.QLevelState import QLevelState, PlayState
+from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QScrollArea
+from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QWidget
+
 from GameController.GameControllerController import GameControllerController
 from GameController.GameControllerModel import GameControllerModel
+from QMyWidgets.QLevelState import PlayState
+from QMyWidgets.QLevelState import QLevelState
 
 
 class QDeskArea(QWidget):

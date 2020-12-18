@@ -1,10 +1,11 @@
 import logging
-from typing import Dict, Optional
+import os
+from typing import Dict
+from typing import Optional
+
 import cv2
 import numpy as np
 import pytesseract
-
-import os
 
 logger = logging.getLogger(__name__)
 

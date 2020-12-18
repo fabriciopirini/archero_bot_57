@@ -1,21 +1,21 @@
+import enum
+import logging
 import os
+import time
+from datetime import datetime
 
 import cv2
-from image_text_detection import extract_energy
-import time
-import logging
-from datetime import datetime
-from PyQt5.QtCore import QObject, pyqtSignal
-from UsbConnector import UsbConnector
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import QObject
+
 from GameScreenConnector import GameScreenConnector
+from image_text_detection import extract_energy
 from StatisticsManager import StatisticsManager
-from Utils import (
-    loadJsonData,
-    readAllSizesFolders,
-    buildDataFolder,
-    getCoordFilePath,
-)
-import enum
+from UsbConnector import UsbConnector
+from Utils import buildDataFolder
+from Utils import getCoordFilePath
+from Utils import loadJsonData
+from Utils import readAllSizesFolders
 
 logger = logging.getLogger(__name__)
 
@@ -590,7 +590,7 @@ class CaveEngine(QObject):
                 logger.info("Unknows screen state. Exiting instead of doing trouble")
                 self._exitEngine()
             else:
-                logger.info("Got an unknown exception: %s" % exc)
+                logger.exception("Got an unknown exception: %s" % exc)
                 self._exitEngine()
         self.pressCloseEndIfEndedFrame()
         self.statisctics_manager.saveOneGame(self.start_date, self.stat_lvl_start, self.currentLevel)

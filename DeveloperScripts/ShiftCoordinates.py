@@ -1,6 +1,7 @@
 import os
-from Utils import *
 import shutil
+
+from Utils import *
 
 old_width = 1080
 old_height = 2220

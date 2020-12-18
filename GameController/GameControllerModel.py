@@ -1,9 +1,12 @@
+import enum
+import logging
 import os
-from PyQt5.QtCore import pyqtSignal, QObject
+
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import QObject
+
 from CaveDungeonEngine import CaveEngine
 from WorkerThread import WorkerThread
-import logging
-import enum
 
 logger = logging.getLogger(__name__)
 

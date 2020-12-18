@@ -1,14 +1,13 @@
-from PyQt5.QtWidgets import (
-    QVBoxLayout,
-    QWidget,
-)
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QWidget
+
+from TouchManager.ButtonOption import ButtonOption
+from TouchManager.FrameCheckOption import FrameCheckOption
+from TouchManager.MovementOption import MovementOption
+from TouchManager.TouchManagerController import ShowAreaState
 from TouchManager.TouchManagerController import TouchManagerController
 from TouchManager.TouchManagerModel import TouchManagerModel
-from TouchManager.TouchManagerController import ShowAreaState
-from TouchManager.ButtonOption import ButtonOption
-from TouchManager.MovementOption import MovementOption
-from TouchManager.FrameCheckOption import FrameCheckOption
 
 
 class ElementOption(QWidget):

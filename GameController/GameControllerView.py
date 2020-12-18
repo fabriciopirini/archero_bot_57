@@ -1,21 +1,21 @@
-from GameController.GameControllerModel import GameControllerModel, EngineState
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (
-    QHBoxLayout,
-    QVBoxLayout,
-    QLabel,
-    QMainWindow,
-    QGridLayout,
-    QWidget,
-    QComboBox,
-)
-from GameController.QToolboxActions import QToolboxActions
+from PyQt5.QtWidgets import QComboBox
+from PyQt5.QtWidgets import QGridLayout
+from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QWidget
+
+from GameController.GameControllerController import GameControllerController
+from GameController.GameControllerModel import EngineState
+from GameController.GameControllerModel import GameControllerModel
 from GameController.QDeskArea import QDeskArea
 from GameController.QDungeonControl import QDungeonController
-from GameController.GameControllerController import GameControllerController
-from GameController.QLevelViewer import QLevelViewer
 from GameController.QDungeonSelector import QDungeonSelector
+from GameController.QLevelViewer import QLevelViewer
+from GameController.QToolboxActions import QToolboxActions
 
 
 class GameControllerWindow(QWidget):

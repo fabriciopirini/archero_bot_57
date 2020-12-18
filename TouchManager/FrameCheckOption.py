@@ -1,16 +1,16 @@
 from functools import partial
 
-from PyQt5.QtWidgets import (
-    QHBoxLayout,
-    QVBoxLayout,
-    QPushButton,
-    QWidget,
-    QScrollArea,
-    QLabel,
-    QRadioButton,
-    QComboBox,
-)
-from PyQt5.QtCore import Qt, QObject
+from PyQt5.QtCore import QObject
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QComboBox
+from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QRadioButton
+from PyQt5.QtWidgets import QScrollArea
+from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QWidget
+
 from TouchManager.TouchManagerController import TouchManagerController
 from TouchManager.TouchManagerModel import TouchManagerModel
 

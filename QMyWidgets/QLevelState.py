@@ -1,21 +1,24 @@
 # -*- coding: utf-8 -*-
-
 # Form implementation generated from reading ui file 'action_tap.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
+import enum
 from functools import partial
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget, QFrame, QVBoxLayout, QHBoxLayout
+from PyQt5 import QtCore
+from PyQt5 import QtGui
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
-import enum
-
-from GameController.GameControllerModel import GameControllerModel
-from GameController.QLevelViewer import QLevelViewer
+from PyQt5.QtWidgets import QFrame
+from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QWidget
 
 from GameController.GameControllerController import GameControllerController
+from GameController.GameControllerModel import GameControllerModel
+from GameController.QLevelViewer import QLevelViewer
 
 
 class PlayState(enum.Enum):

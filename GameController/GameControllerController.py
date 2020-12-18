@@ -1,5 +1,8 @@
-from PyQt5.QtCore import pyqtSignal, QObject
-from GameController.GameControllerModel import GameControllerModel, EngineState
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import QObject
+
+from GameController.GameControllerModel import EngineState
+from GameController.GameControllerModel import GameControllerModel
 
 
 class GameControllerController(QObject):

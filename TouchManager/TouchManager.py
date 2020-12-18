@@ -1,7 +1,8 @@
 from PyQt5 import QtWidgets
-from TouchManager.TouchManagerView import TouchManagerWindow
-from TouchManager.TouchManagerModel import TouchManagerModel
+
 from TouchManager.TouchManagerController import TouchManagerController
+from TouchManager.TouchManagerModel import TouchManagerModel
+from TouchManager.TouchManagerView import TouchManagerWindow
 
 if __name__ == "__main__":
     import sys

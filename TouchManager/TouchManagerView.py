@@ -1,26 +1,27 @@
-from PyQt5.QtGui import QPainter, QPen, QBrush, QColor
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (
-    QHBoxLayout,
-    QVBoxLayout,
-    QPushButton,
-    QLabel,
-    QMainWindow,
-    QInputDialog,
-    QLineEdit,
-    QComboBox,
-    QWidget,
-    QFrame,
-    QGridLayout,
-)
-from TouchManager.TouchManagerModel import TouchManagerModel
-from TouchManager.TouchManagerController import TouchManagerController
-from TouchManager.TouchManagerController import ShowAreaState
-from TouchManager.CoordinatesSelector import CoordinatesSelector
-from TouchManager.SwipableListWidget import SwipableListWidget
+from PyQt5.QtGui import QBrush
+from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QPainter
+from PyQt5.QtGui import QPen
+from PyQt5.QtWidgets import QComboBox
+from PyQt5.QtWidgets import QFrame
+from PyQt5.QtWidgets import QGridLayout
+from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QInputDialog
+from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QWidget
 
+from TouchManager.CoordinatesSelector import CoordinatesSelector
 from TouchManager.ElementOption import ElementOption
+from TouchManager.SwipableListWidget import SwipableListWidget
+from TouchManager.TouchManagerController import ShowAreaState
+from TouchManager.TouchManagerController import TouchManagerController
+from TouchManager.TouchManagerModel import TouchManagerModel
 
 
 class TouchManagerWindow(QWidget):

@@ -1,24 +1,25 @@
 import csv
+import datetime
+import enum
 import json
 import os
+import sys
 from functools import partial
 
 from PyQt5 import QtWidgets
-import sys
-import datetime
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, Qt
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import QObject
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QComboBox,
-    QFormLayout,
-    QPushButton,
-    QLineEdit,
-)
-import enum
+from PyQt5.QtWidgets import QComboBox
+from PyQt5.QtWidgets import QFormLayout
+from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QWidget
 
 
 class State(enum.Enum):

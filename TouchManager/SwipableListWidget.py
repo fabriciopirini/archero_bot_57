@@ -1,14 +1,14 @@
 from functools import partial
 
-from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtWidgets import (
-    QWidget,
-    QScrollArea,
-    QFormLayout,
-    QGridLayout,
-)
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5 import QtGui
 from PyQt5 import QtWidgets
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QFormLayout
+from PyQt5.QtWidgets import QGridLayout
+from PyQt5.QtWidgets import QScrollArea
+from PyQt5.QtWidgets import QWidget
+
 from TouchManager.TouchManagerController import TouchManagerController
 from TouchManager.TouchManagerModel import TouchManagerModel
 

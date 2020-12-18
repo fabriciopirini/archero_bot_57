@@ -1,7 +1,7 @@
-import os
 import csv
-from datetime import datetime
+import os
 import time
+from datetime import datetime
 
 
 class StatisticsManager(object):

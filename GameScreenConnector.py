@@ -1,16 +1,16 @@
-from typing import Tuple
-import cv2
-from UsbConnector import UsbConnector
-import os
 import logging
+import os
 import time
+from typing import Tuple
+
+import cv2
 import numpy as np
-from Utils import (
-    loadJsonData,
-    buildDataFolder,
-)
-from image_text_detection import extract_text_from_image
+
 from custom_types import Frame
+from image_text_detection import extract_text_from_image
+from UsbConnector import UsbConnector
+from Utils import buildDataFolder
+from Utils import loadJsonData
 
 logger = logging.getLogger(__name__)
 
@@ -168,7 +168,10 @@ class GameScreenConnector:
             frame = self.get_frame()
         around = dict_to_take[coords_name].get("around", 2)
         is_equal = self._check_screen_points_equal(
-            frame, dict_to_take[coords_name]["coordinates"], dict_to_take[coords_name]["values"], around=around
+            frame,
+            dict_to_take[coords_name]["coordinates"],
+            dict_to_take[coords_name]["values"],
+            around=around,
         )
         return is_equal
 

@@ -1,7 +1,8 @@
 from PyQt5 import QtWidgets
-from GameController.GameControllerView import GameControllerWindow
-from GameController.GameControllerModel import GameControllerModel
+
 from GameController.GameControllerController import GameControllerController
+from GameController.GameControllerModel import GameControllerModel
+from GameController.GameControllerView import GameControllerWindow
 
 if __name__ == "__main__":
     import sys

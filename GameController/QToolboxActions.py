@@ -1,14 +1,12 @@
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import (
-    QHBoxLayout,
-    QBoxLayout,
-    QVBoxLayout,
-    QPushButton,
-    QFormLayout,
-    QLabel,
-    QWidget,
-)
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QBoxLayout
+from PyQt5.QtWidgets import QFormLayout
+from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QWidget
 
 
 class QToolboxActions(QWidget):

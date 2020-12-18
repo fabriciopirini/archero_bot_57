@@ -1,11 +1,12 @@
+import io
+import logging
+import os
+import time
+
+import numpy as np
+from PIL import Image
 from ppadb.client import Client as AdbClient
 from ppadb.device import Device
-import os
-from PIL import Image
-import numpy as np
-import io
-import time
-import logging
 
 from WorkerThread import WorkerThread
 

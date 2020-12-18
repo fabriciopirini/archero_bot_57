@@ -1,18 +1,18 @@
-from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import (
-    QHBoxLayout,
-    QLabel,
-    QBoxLayout,
-    QVBoxLayout,
-    QPushButton,
-    QWidget,
-    QInputDialog,
-)
 from PyQt5 import QtCore
+from PyQt5 import QtGui
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
-from GameController.GameControllerModel import GameControllerModel
+from PyQt5.QtGui import QCursor
+from PyQt5.QtWidgets import QBoxLayout
+from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QInputDialog
+from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QWidget
+
 from GameController.GameControllerController import GameControllerController
+from GameController.GameControllerModel import GameControllerModel
 
 
 class QDungeonSelector(QWidget):
