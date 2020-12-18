@@ -11,6 +11,7 @@ text_location = {
     "level-up": {"startX": 150, "startY": 490, "endX": 925, "endY": 570},
     "check-energy": {"startX": 375, "startY": 40, "endX": 500, "endY": 80},
     "mysterious-vendor": {"startX": 305, "startY": 330, "endX": 780, "endY": 400},
+    "endgame": {"startX": 320, "startY": 550, "endX": 750, "endY": 650},
 }
 
 

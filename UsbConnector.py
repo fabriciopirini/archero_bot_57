@@ -5,6 +5,7 @@ from PIL import Image
 import numpy as np
 import io
 import time
+import logging
 
 from WorkerThread import WorkerThread
 
@@ -12,6 +13,8 @@ from WorkerThread import WorkerThread
 This is the library
 https://pypi.org/project/pure-python-adb/
 """
+
+logger = logging.getLogger(__name__)
 
 
 class UsbConnector(object):
@@ -38,7 +41,7 @@ class UsbConnector(object):
             f(state)
 
     def stopConnectionCheck(self):
-        print("Stopping continous device check")
+        logger.info("Stopping continous device check")
         self._continousCheckStopRequired = True
 
     def setFunctionToCallOnConnectionStateChanged(self, function):
@@ -125,7 +128,7 @@ class UsbConnector(object):
         os.system("adb exec-out screencap -p > " + name)
         return True
 
-    def adb_screen_getpixels(self):
+    def adb_screen_getpixels(self) -> np.ndarray:
         if not self.connected:
             return np.zeros((1080, 2220))
         bytes_screen = self.my_device.screencap()

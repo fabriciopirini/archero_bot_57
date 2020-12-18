@@ -135,14 +135,14 @@ class CaveEngine(QObject):
     def onConnectionStateChanged(self):
         if self.device_connector.connected:
             self.initDataFolders()
-            self.screen_connector.changeDeviceConnector(self.device_connector)
+            self.screen_connector.change_device_connector(self.device_connector)
             self.updateScreenSizeByPhone()
 
     def updateScreenSizeByPhone(self):
         if self.device_connector is not None:
             w, h = self.device_connector.adb_get_size()
-            self.changeScreenSize(w, h)
-            self.screen_connector.changeScreenSize(w, h)
+            self.change_screen_size(w, h)
+            self.screen_connector.change_screen_size(w, h)
         else:
             logger.info("Device connector is none. initialize it before calling this method!")
 
@@ -160,7 +160,7 @@ class CaveEngine(QObject):
         self.screen_connector.stopRequested = True
         self.statisctics_manager.saveOneGame(self.start_date, self.stat_lvl_start, self.currentLevel)
 
-    def changeScreenSize(self, w, h):
+    def change_screen_size(self, w, h):
         self.width, self.heigth = w, h
         logger.info("New resolution set: %dx%d" % (self.width, self.heigth))
         self.resolutionChanged.emit(w, h)
@@ -207,7 +207,7 @@ class CaveEngine(QObject):
             exit()
         # convert back from normalized values
         x, y = int(self.buttons[name][0] * self.width), int(self.buttons[name][1] * self.heigth)
-        logger.info("Tapping on %s at [%d, %d]" % (name, x, y))
+        logger.debug("Tapping on %s at [%d, %d]" % (name, x, y))
         self.device_connector.adb_tap((x, y))
 
     def wait(self, s):
@@ -230,42 +230,41 @@ class CaveEngine(QObject):
 
     def exit_dungeon_uncentered_new(self, second_check=True):
         # Center
-        px, dir = self.screen_connector.getPlayerDecentering()
+        _, direction = self.screen_connector.get_player_decentering()
         self.wait(0.5)
-        if dir == "left":
+        if direction == "left":
             self.swipe("w", 0.7)
             self.swipe("ne", 4)
-        elif dir == "right":
+        elif direction == "right":
             self.swipe("e", 0.7)
             self.swipe("nw", 4)
-        elif dir == "center":
+        elif direction == "center":
             self.swipe("n", 2)
         else:
             self.swipe("n", 2)
-        if second_check:
-            if self.screen_connector.getFrameState() != "in_game":
-                self.reactGamePopups()
-                self.exit_dungeon_uncentered_new(False)
+        if second_check and self.screen_connector.get_frame_state() != "in_game":
+            self.reactGamePopups()
+            self.exit_dungeon_uncentered_new(False)
         self.wait(1)  # Safety wait for extra check
 
     def exit_dungeon_uncentered_old(self):
         self.wait(2)
-        upper_line = self.screen_connector.getHorLine("hor_up_line")
+        upper_line = self.screen_connector.get_horizontal_line("hor_up_line")
         logger.info("Going trough door to exit...")
         self.wait(1)
         self.swipe("n", 2)
         self.wait(2)
-        if not self.screen_connector.checkUpperLineHasChanged(upper_line):
+        if not self.screen_connector.check_upper_line_has_changed(upper_line):
             logger.info("Not exiting, trying right...")
             self.wait(1)
             self.swipe("ne", 3)
             self.wait(2)
-            if not self.screen_connector.checkUpperLineHasChanged(upper_line):
+            if not self.screen_connector.check_upper_line_has_changed(upper_line):
                 logger.info("Not exiting, trying left...")
                 self.wait(1)
                 self.swipe("nw", 4)
                 self.wait(2)
-                if not self.screen_connector.checkUpperLineHasChanged(upper_line):
+                if not self.screen_connector.check_upper_line_has_changed(upper_line):
                     raise Exception("unable_exit_dungeon")
         logger.info("Exit level")
 
@@ -289,7 +288,7 @@ class CaveEngine(QObject):
         self.swipe("n", 1.5)
 
     def goTroughDungeon6(self):
-        logger.info("Going through dungeon (designed for #6)")
+        logger.debug("Going through dungeon (designed for #6)")
         self.swipe("n", 1.5)
         self.swipe("w", 0.32)
         self.swipe("n", 0.5)
@@ -329,7 +328,7 @@ class CaveEngine(QObject):
             self.centerPlayer()
 
     def centerPlayer(self):
-        px, dir = self.screen_connector.getPlayerDecentering()
+        px, dir = self.screen_connector.get_player_decentering()
         # Move in oppositye direction. Speed is made by y = mx + q
         duration = 0.019 * abs(px) - 4.8
         if px < self.screen_connector.door_width / 2.0:
@@ -346,19 +345,19 @@ class CaveEngine(QObject):
     def letPlay(self, _time: int, is_boss=False):
         check_exp_bar = not is_boss
         # self.wait(2)
-        logger.info("Auto attacking")
-        experience_bar_line = self.screen_connector.getLineExpBar()
+        logger.debug("Auto attacking")
+        experience_bar_line = self.screen_connector.get_line_exp_bar()
         recheck = False
         for i in range(_time, 0, -1):
             if i % self.check_seconds == 0 or recheck:
                 recheck = False
-                logger.info("Checking screen...")
-                frame = self.screen_connector.getFrame()
-                state = self.screen_connector.getFrameState(frame)
+                logger.debug("Checking screen...")
+                frame = self.screen_connector.get_frame()
+                state = self.screen_connector.get_frame_state(frame)
                 if state == "unknown":
                     logger.info("Unknown screen situation detected. Checking again...")
                     self.wait(2)
-                    if self.screen_connector.getFrameState() == "unknown":
+                    if self.screen_connector.get_frame_state() == "unknown":
                         raise Exception("unknown_screen_state")
                     else:
                         recheck = True
@@ -382,17 +381,17 @@ class CaveEngine(QObject):
                     logger.info("Level ended. Collecting results for leveling up.")
                     self.wait(1)
                     return
-                elif check_exp_bar and self.screen_connector.checkExpBarHasChanged(experience_bar_line, frame):
+                elif check_exp_bar and self.screen_connector.check_exp_bar_has_changed(experience_bar_line, frame):
                     logger.info("Experience gained!")
                     self.wait(3)
                     return
                 elif state == "in_game":
-                    if self.screen_connector.checkDoorsOpen(frame):
+                    if self.screen_connector.check_doors_open(frame):
                         logger.info("In game, door opened")
                         self.wait(1)
                         return
                     else:
-                        logger.info("In game. Playing but level not ended")
+                        logger.debug("In game. Playing but level not ended")
             self.wait(1)
 
     def _exitEngine(self):
@@ -412,8 +411,8 @@ class CaveEngine(QObject):
             if i > self.max_loops_game:
                 logger.info("Max loops reached")
                 self._exitEngine()
-            logger.info("Checking screen...")
-            state = self.screen_connector.getFrameState()
+            logger.debug("Checking screen...")
+            state = self.screen_connector.get_frame_state()
             logger.info("state: %s" % state)
             if state == "select_ability":
                 self.tap("ability_left")
@@ -547,7 +546,7 @@ class CaveEngine(QObject):
                 self.boss_lvl()
             self.changeCurrentLevel(self.currentLevel + 1)
         self.wait(5)
-        if self.screen_connector.checkFrame("endgame"):
+        if self.screen_connector.check_frame("endgame"):
             self.tap("close_end")
             self.gameWon.emit()
 
@@ -590,7 +589,7 @@ class CaveEngine(QObject):
         self.screen_connector.stopRequested = False
         logger.info("New game. Starting from level %d" % self.currentLevel)
         self.wait(2)
-        if self.screen_connector.checkFrame("time_prize"):
+        if self.screen_connector.check_frame("time_prize"):
             logger.info("Collecting time prize")
             self.tap("resume")
             self.wait(3)
@@ -598,7 +597,7 @@ class CaveEngine(QObject):
             if self.UseManualStart:
                 a = input("Press enter to start a game (your energy bar must be at least 5)")
             else:
-                while (not self.SkipEnergyCheck) and not self.screen_connector.checkFrame("least_5_energy"):
+                while (not self.SkipEnergyCheck) and not self.screen_connector.check_frame("least_5_energy"):
                     logger.info("No energy, waiting for one minute")
                     self.noEnergyLeft.emit()
                     self.wait(60)
@@ -622,5 +621,5 @@ class CaveEngine(QObject):
         self.statisctics_manager.saveOneGame(self.start_date, self.stat_lvl_start, self.currentLevel)
 
     def pressCloseEndIfEndedFrame(self):
-        if self.screen_connector.checkFrame("endgame"):
+        if self.screen_connector.check_frame("endgame"):
             self.tap("close_end")

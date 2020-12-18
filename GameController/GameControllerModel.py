@@ -5,8 +5,10 @@ from CaveDungeonEngine import CaveEngine
 import time
 from UsbConnector import UsbConnector
 from WorkerThread import WorkerThread
-
+import logging
 import enum
+
+logger = logging.getLogger(__name__)
 
 
 class EngineState(enum.Enum):
@@ -68,7 +70,7 @@ class GameControllerModel(QObject):
     def requestClose(self):
         self.engine.device_connector.stopConnectionCheck()
         if self.currentEngineState == EngineState.Ready:
-            print("Stopping engine... ")
+            logger.info("Stopping engine... ")
             self._stopEngineUnsafe()
         self.workerThread = None
         self.engine = None
@@ -133,7 +135,7 @@ class GameControllerModel(QObject):
             self.workerThread = None
             self.setEngineState(EngineState.Ready)
         except Exception as e:
-            print("Trying to kill process resulted in: %s" % str(e))
+            logger.info("Trying to kill process resulted in: %s" % str(e))
 
     def pauseDungeon(self):
         if self.workerThread is not None:
@@ -143,7 +145,7 @@ class GameControllerModel(QObject):
                 new_thread.function = self._stopEngineUnsafe
                 new_thread.start()
             except Exception as e:
-                print("Trying to kill process resulted in: %s" % str(e))
+                logger.info("Trying to kill process resulted in: %s" % str(e))
 
     def stopDungeon(self):
         self.pauseDungeon()

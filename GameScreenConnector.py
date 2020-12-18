@@ -1,15 +1,16 @@
+from typing import Tuple
 import cv2
 from UsbConnector import UsbConnector
 import os
 import logging
 import time
+import numpy as np
 from Utils import (
     loadJsonData,
-    saveJsonData_oneIndent,
-    saveJsonData_twoIndent,
     buildDataFolder,
 )
 from image_text_detection import extract_text_from_image
+from custom_types import Frame
 
 logger = logging.getLogger(__name__)
 
@@ -30,15 +31,14 @@ class GameScreenConnector:
         self.yellow_experience = [255, 170, 16, 255]
         self.green_hp = [70, 158, 47, 255]
         self.green_hp_high = [84, 180, 58, 255]
-        self.black_hp = [25, 25, 25, 255]
         # Line coordinates: x1,y1,x2,y2
         self.hor_lines = {}
-        self.stopRequested = False
+        self.stop_requested = False
 
-    def changeDeviceConnector(self, new_dev):
+    def change_device_connector(self, new_dev: UsbConnector):
         self.device_connector = new_dev
 
-    def changeScreenSize(self, w, h):
+    def change_screen_size(self, w, h):
         self.width, self.height = w, h
         self.coords_path = os.path.join(
             "datas",
@@ -76,7 +76,7 @@ class GameScreenConnector:
             and px_expected[2] - arr[2] <= px_readed[2] <= px_expected[2] + arr[2]
         )
 
-    def getFrameAttr(self, frame, attributes):
+    def get_frame_attr(self, frame, attributes):
         attr_data = []
         for attr in attributes:
             x = int(attr[0] * self.width)
@@ -84,7 +84,7 @@ class GameScreenConnector:
             attr_data.append(frame[int(y * self.width + x)])
         return attr_data
 
-    def _check_screen_points_equal(self, frame, points_list, points_value, around=2):
+    def _check_screen_points_equal(self, frame: Frame, points_list, points_value, around=2):
         """
         Gets 2 lists of x,y coordinates where to get values and list of values to comapre.
         Returns true if current frame have those values
@@ -100,7 +100,7 @@ class GameScreenConnector:
             print("-----------------------------------")
         if self.debug:
             print("|   Smartphone   |     Values     |")
-        attr_data = self.getFrameAttr(frame, points_list)
+        attr_data = self.get_frame_attr(frame, points_list)
         equal = True
         for i in range(len(attr_data)):
             if self.debug:
@@ -123,14 +123,14 @@ class GameScreenConnector:
             print("-----------------------------------")
         return equal
 
-    def checkDoorsOpen(self, frame=None):
+    def check_doors_open(self, frame: Frame = None):
         if frame is None:
-            frame = self.getFrame()
+            frame = self.get_frame()
         # Add opened doors check
         px_up = 50
         h_bar = self.hor_lines["hor_hp_bar"][1]  # HP bar height
         for i in range(1, 4, 1):
-            line = self._getHorLine(
+            line = self._get_horizontal_line(
                 [
                     480 / 1080.0,
                     h_bar - ((px_up * i) / self.height),
@@ -148,7 +148,7 @@ class GameScreenConnector:
                 return True
         return False
 
-    def checkFrame(self, coords_name: str, frame=None):
+    def check_frame(self, coords_name: str, frame: Frame = None):
         """
         Given a coordinates name it checkes if the Frame has those pixels.
         If no Frame given , it will take a screenshot.
@@ -165,7 +165,7 @@ class GameScreenConnector:
         if self.debug:
             print("Checking %s" % (coords_name))
         if frame is None:
-            frame = self.getFrame()
+            frame = self.get_frame()
         around = 2 if "around" not in dict_to_take[coords_name].keys() else dict_to_take[coords_name]["around"]
         is_equal = self._check_screen_points_equal(
             frame,
@@ -175,12 +175,12 @@ class GameScreenConnector:
         )
         return is_equal
 
-    def getFrame(self):
-        if self.stopRequested:
+    def get_frame(self) -> np.ndarray:
+        if self.stop_requested:
             exit()
         return self.device_connector.adb_screen_getpixels()
 
-    def getFrameStateComplete(self, frame=None) -> dict:
+    def get_frame_state_complete(self, frame: Frame = None) -> dict:
         """
         Computes a complete check on given frame (takes a screen if none passed.
         Returns a dictionary with all known states with boolean value assigned.
@@ -188,7 +188,7 @@ class GameScreenConnector:
         """
         result = {}
         if frame is None:
-            frame = self.getFrame()
+            frame = self.get_frame()
         for k, v in self.static_coords.items():
             around = 2 if "around" not in self.static_coords[k].keys() else self.static_coords[k]["around"]
             if self.debug:
@@ -196,9 +196,9 @@ class GameScreenConnector:
             result[k] = self._check_screen_points_equal(frame, v["coordinates"], v["values"], around=around)
         return result
 
-    def define_state_by_pixel_matching(self, frame) -> str:
+    def define_state_by_pixel_matching(self, frame: Frame) -> str:
         if frame is None:
-            frame = self.getFrame()
+            frame = self.get_frame()
         for k, v in self.static_coords.items():
             around = 2 if "around" not in self.static_coords[k].keys() else self.static_coords[k]["around"]
             if self.debug:
@@ -207,11 +207,11 @@ class GameScreenConnector:
                 return k
         return "unknown"
 
-    def define_state_by_OCR(self) -> str:
+    def define_state_by_ocr(self) -> str:
         os.system("adb exec-out screencap -p >  screen.png")
         image = cv2.imread("screen.png")
         extracted_text = extract_text_from_image(image).lower()
-        logger.info(f"Text extracted: {extracted_text}")
+        logger.debug(f"Text extracted: {extracted_text}")
 
         if "in_game" in extracted_text:
             return "in_game"
@@ -227,10 +227,12 @@ class GameScreenConnector:
             return "special_gift_respin"
         elif "devil" in extracted_text:
             return "devil_question"
+        elif "game over" in extracted_text:
+            return "endgame"
 
         return "unknown"
 
-    def getFrameState(self, frame=None) -> str:
+    def get_frame_state(self, frame: Frame = None) -> str:
         """
         Computes a complete check on given frame (takes a screen if none passed.
         Returns a string with the name of current state, or unknown if no state found.
@@ -238,24 +240,24 @@ class GameScreenConnector:
         """
         start_time = time.perf_counter()
 
-        state = self.define_state_by_OCR()
+        state = self.define_state_by_ocr()
 
         end_time = time.perf_counter()
-        logger.info(f"OCR detection took {end_time-start_time:0.4f} seconds")
+        logger.debug(f"OCR detection took {end_time-start_time:0.4f} seconds")
 
         if state == "unknown":
             start_time = time.perf_counter()
-            logger.info("Couldn't detect state. Falling back for Pixel matching...")
+            logger.debug("Couldn't detect state. Falling back for Pixel matching...")
 
             state = self.define_state_by_pixel_matching(frame)
 
             end_time = time.perf_counter()
 
-            logger.info(f"Pixel detection failed in {end_time-start_time:0.4f} seconds")
+            logger.debug(f"Pixel detection failed in {end_time-start_time:0.4f} seconds")
 
         return state
 
-    def _getHorLine(self, hor_line, frame):
+    def _get_horizontal_line(self, hor_line, frame: Frame):
         """
         Returns a horizontal line (list of colors) given hor_line [x1, y1, x2, y2] coordinates. If no frame given, it takes a screen.
         :param hor_line:
@@ -269,19 +271,19 @@ class GameScreenConnector:
             hor_line[3] * self.height,
         )
         if frame is None:
-            frame = self.getFrame()
+            frame = self.get_frame()
         start = int(y1 * self.width + x1)
         size = int(x2 - x1)
         line = frame[start : start + size]
         return line
 
-    def getLineExpBar(self, frame=None):
+    def get_line_exp_bar(self, frame: Frame = None):
         """
         Returns the colors of Experience bar as a line. If no frame given, it takes a screen.
         :param frame:
         :return:
         """
-        line = self._getHorLine(self.hor_lines["hor_exp_bar"], frame)
+        line = self._get_horizontal_line(self.hor_lines["hor_exp_bar"], frame)
         masked_yellow = []
         for px in line:
             if self.pixel_equals(px, self.yellow_experience, 3):
@@ -290,28 +292,9 @@ class GameScreenConnector:
                 masked_yellow.append([0, 0, 0, 0])
         return masked_yellow
 
-    def filterRawHpLine_window(self, line):
-        """
-        Given a horizontal array of pixels RGBA, filter data in order to obtain position of character based on his HP.
-        """
-        # Filter outlayers:
-        first_filter = self.removeOutlayersInLine(line, self.green_hp)
-        return first_filter
-
-    def filterRawHpLine_convolution(self, line):
-        """
-        Given a horizontal array of pixels RGBA, convolve pixel in order to get clean location of player
-        """
-        # TODO: finish this or use filterRawHpLine_window
-        return line
-
-    def filterLineByColor(self, line):
+    def filter_line_by_color(self, line):
         masked_green = []
-        i = 0
         for px in line:
-            i += 1
-            if i == 452:
-                a = 0
             if self.pixel_equals(px, self.green_hp, [8, 12, 8]) or self.pixel_equals(
                 px, self.green_hp_high, [8, 12, 8]
             ):
@@ -320,7 +303,7 @@ class GameScreenConnector:
                 masked_green.append([0, 0, 0, 0])
         return masked_green
 
-    def getPlayerDecenteringByStartStop(self, line):
+    def get_player_decentering_by__start_stop(self, line):
         first = 0
         last = 0
         for i, el in enumerate(line):
@@ -332,7 +315,7 @@ class GameScreenConnector:
         center_diff = int((self.width / 2) - center_px)
         return center_diff
 
-    def getPlayerDecenteringByMaxGreenGroup(self, line):
+    def get_player_decentering_by_max_green_group(self, line):
         groups = []
         high_val = self.green_hp[1]
         start = 0
@@ -351,52 +334,29 @@ class GameScreenConnector:
         center_diff = int((self.width / 2) - center_px)
         return center_diff
 
-    def getPlayerDecentering(self) -> (int, str):
-        line = self.getLineHpBar()
-        line = self.filterLineByColor(line)
+    def get_player_decentering(self) -> Tuple[int, str]:
+        line = self.get_line_hp_bar()
+        line = self.filter_line_by_color(line)
         line_filtered = self.filterRawHpLine_window(line)
-        # center_diff = self.getPlayerDecenteringByStartStop(line_filtered)
-        center_diff = self.getPlayerDecenteringByMaxGreenGroup(line_filtered)
-        if abs(center_diff) < (self.door_width * self.width) / 4.0:
-            dir = "center"
-        else:
-            dir = "right" if center_diff < 0 else "left"
-        logger.info("Character on the %s side by %dpx" % (dir, abs(center_diff)))
-        return center_diff, dir
 
-    def getLineHpBar(self, frame=None):
+        center_diff = self.get_player_decentering_by_max_green_group(line_filtered)
+        if abs(center_diff) < (self.door_width * self.width) / 4.0:
+            direction = "center"
+        else:
+            direction = "right" if center_diff < 0 else "left"
+        logger.info("Character on the %s side by %dpx" % (direction, abs(center_diff)))
+        return center_diff, direction
+
+    def get_line_hp_bar(self, frame: Frame = None):
         """
         Returns the colors of Experience bar as a line. If no frame given, it takes a screen.
         :param frame:
         :return:
         """
-        line = self._getHorLine(self.hor_lines["hor_hp_bar"], frame)
+        line = self._get_horizontal_line(self.hor_lines["hor_hp_bar"], frame)
         return line
 
-    def removeOutlayersInLine(self, masked_green, high_pixel_color):
-        line = masked_green.copy()
-        n = len(line)
-        i = 0
-        window_width = 15
-        min_greens_pixels = 9
-        while i < n:
-            if i in range(window_width):  # First 4 take black. no problem losing them
-                line[i] = [0, 0, 0, 0]
-            else:
-                if i > 370:
-                    a = 3
-                sum = 0
-                for j in range(window_width):
-                    sum += 1 if masked_green[i - j][0] == high_pixel_color[0] else 0
-                for j in range(window_width):
-                    line[i - j] = [0, 0, 0, 0] if sum < min_greens_pixels else high_pixel_color
-                i += window_width - 1  # Skip() and go to next window
-            i += 1
-        for i in range(window_width):  # Last 4 take black. no problem losing them
-            line[n - i - 1] = [0, 0, 0, 0]
-        return line
-
-    def getHorLine(self, line_name: str, frame=None):
+    def get_horizontal_line(self, line_name: str, frame: Frame = None):
         """
         Returns the colors of Experience bar as a line. If no frame given, it takes a screen.
         :param line_name: line x,y coordinates
@@ -406,9 +366,9 @@ class GameScreenConnector:
         if line_name not in self.hor_lines:
             print("Given line name '%s' is not a known horizontal line name." % line_name)
             return []
-        return self._getHorLine(self.hor_lines[line_name], frame)
+        return self._get_horizontal_line(self.hor_lines[line_name], frame)
 
-    def _checkBarHasChanged(self, old_line_hor_bar, current_exp_bar, around=0):
+    def _check_bar_has_changed(self, old_line_hor_bar, current_exp_bar, around=0):
         if len(old_line_hor_bar) != len(current_exp_bar):
             min_len = min(len(old_line_hor_bar), len(current_exp_bar))
             old_line_hor_bar = old_line_hor_bar[:min_len]
@@ -420,7 +380,7 @@ class GameScreenConnector:
                 break
         return changed
 
-    def checkExpBarHasChanged(self, old_line_hor_bar, frame=None):
+    def check_exp_bar_has_changed(self, old_line_hor_bar, frame: Frame = None):
         """
         Checks if old experience bar line is different that this one. If no frame given, it takes a screen.
         :param old_line_hor_bar:
@@ -429,10 +389,10 @@ class GameScreenConnector:
         """
         if self.debug:
             print("Checking LineExpBar has changed")
-        new_line = self.getLineExpBar(frame)
-        return self._checkBarHasChanged(old_line_hor_bar, new_line, around=2)
+        new_line = self.get_line_exp_bar(frame)
+        return self._check_bar_has_changed(old_line_hor_bar, new_line, around=2)
 
-    def checkUpperLineHasChanged(self, old_line, frame=None):
+    def check_upper_line_has_changed(self, old_line, frame: Frame = None):
         """
         Checks if old upper line is different that this one. If no frame given, it takes a screen.
         :param old_line:
@@ -441,5 +401,5 @@ class GameScreenConnector:
         """
         if self.debug:
             print("Checking LineUpper has changed")
-        new_line = self.getHorLine("hor_up_line", frame)
-        return self._checkBarHasChanged(old_line, new_line, around=10)
+        new_line = self.get_horizontal_line("hor_up_line", frame)
+        return self._check_bar_has_changed(old_line, new_line, around=10)

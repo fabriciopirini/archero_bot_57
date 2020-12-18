@@ -36,7 +36,7 @@ width, heigth = screens_data[folder]
 excluded = []
 
 screen_conector = GameScreenConnector()
-screen_conector.changeScreenSize(width, heigth)
+screen_conector.change_screen_size(width, heigth)
 screen_conector.debug = debug
 static_coords = screen_conector.static_coords
 
@@ -47,11 +47,11 @@ for file in files:
     if file not in excluded:
         full_path = os.path.join(screens_path, file)
         frame = getImageFrame(full_path)
-        complete_frame = screen_conector.getFrameStateComplete(frame)
+        complete_frame = screen_conector.get_frame_state_complete(frame)
         computed = [k for k, v in complete_frame.items() if v]
         sum = len(computed)
         ok = False
-        exergy_print = "" if not screen_conector.checkFrame("least_5_energy", frame) else " + least_5_energy"
+        exergy_print = "" if not screen_conector.check_frame("least_5_energy", frame) else " + least_5_energy"
         if sum == 0:
             print("NO_DETECTION - %s %s" % (file, exergy_print))
         elif sum == 1:
