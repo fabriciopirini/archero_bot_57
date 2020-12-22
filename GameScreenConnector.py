@@ -94,17 +94,17 @@ class GameScreenConnector:
         :return:
         """
         if len(points_list) != len(points_value):
-            print("Wrong size between points and values!")
+            logger.debug("Wrong size between points and values!")
             return False
         if self.debug:
-            print("-----------------------------------")
+            logger.debug("-----------------------------------")
         if self.debug:
-            print("|   Smartphone   |     Values     |")
+            logger.debug("|   Smartphone   |     Values     |")
         attr_data = self.get_frame_attr(frame, points_list)
         equal = True
         for i in range(len(attr_data)):
             if self.debug:
-                print(
+                logger.debug(
                     "| %4d %4d %4d | %4d %4d %4d |"
                     % (
                         attr_data[i][0],
@@ -118,9 +118,9 @@ class GameScreenConnector:
             if not self.pixel_equals(attr_data[i], points_value[i], around=around):
                 equal = False
         if self.debug:
-            print("|-->         %s" % ("  equal           <--|" if equal else "not equal         <--|"))
+            logger.debug("|-->         %s" % ("  equal           <--|" if equal else "not equal         <--|"))
         if self.debug:
-            print("-----------------------------------")
+            logger.debug("-----------------------------------")
         return equal
 
     def check_doors_open(self, frame: Frame = None):
@@ -160,10 +160,10 @@ class GameScreenConnector:
         elif coords_name in self.specific_checks_coords.keys():
             dict_to_take = self.specific_checks_coords
         else:
-            print("No coordinates called %s is saved in memory! Returning false." % coords_name)
+            logger.debug("No coordinates called %s is saved in memory! Returning false." % coords_name)
             return False
         if self.debug:
-            print("Checking %s" % (coords_name))
+            logger.debug("Checking %s" % (coords_name))
         if frame is None:
             frame = self.get_frame()
         around = dict_to_take[coords_name].get("around", 2)
@@ -192,7 +192,7 @@ class GameScreenConnector:
         for k, v in self.static_coords.items():
             around = self.static_coords[k].get("around", 2)
             if self.debug:
-                print("Checking %s, around = %d" % (k, around))
+                logger.debug("Checking %s, around = %d" % (k, around))
             result[k] = self._check_screen_points_equal(frame, v["coordinates"], v["values"], around=around)
         return result
 
@@ -202,7 +202,7 @@ class GameScreenConnector:
         for k, v in self.static_coords.items():
             around = self.static_coords[k].get("around", 2)
             if self.debug:
-                print("Checking %s, around = %d" % (k, around))
+                logger.debug("Checking %s, around = %d" % (k, around))
             if self._check_screen_points_equal(frame, v["coordinates"], v["values"], around=around):
                 return k
         return "unknown"
@@ -216,10 +216,8 @@ class GameScreenConnector:
 
         extracted_text = extracted_from_image.get("text", "")
         params = extracted_from_image.get("params", {})
-        energy_text = params.get("energy", "")
-        energy = energy_text.split("/")[0] if energy_text else None
 
-        logger.debug(f"Text extracted: {extracted_text}, Energy: {energy}")
+        logger.debug(f"Text extracted: {extracted_text}, Params: {params}")
 
         if "in_game" in extracted_text:
             return "in_game"
@@ -403,7 +401,7 @@ class GameScreenConnector:
         :return:
         """
         if line_name not in self.hor_lines:
-            print("Given line name '%s' is not a known horizontal line name." % line_name)
+            logger.debug("Given line name '%s' is not a known horizontal line name." % line_name)
             return []
         return self._get_horizontal_line(self.hor_lines[line_name], frame)
 
@@ -427,7 +425,7 @@ class GameScreenConnector:
         :return:
         """
         if self.debug:
-            print("Checking LineExpBar has changed")
+            logger.debug("Checking LineExpBar has changed")
         new_line = self.get_line_exp_bar(frame)
         return self._check_bar_has_changed(old_line_hor_bar, new_line, around=2)
 
@@ -439,6 +437,6 @@ class GameScreenConnector:
         :return:
         """
         if self.debug:
-            print("Checking LineUpper has changed")
+            logger.debug("Checking LineUpper has changed")
         new_line = self.get_horizontal_line("hor_up_line", frame)
         return self._check_bar_has_changed(old_line, new_line, around=10)

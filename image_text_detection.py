@@ -62,24 +62,18 @@ def process_image(image):
     return white_text_img, black_text_img
 
 
-def extract_text_from_image(image, only_energy=False) -> Dict[str, Optional[str]]:
+def extract_text_from_image(image) -> Dict[str, Optional[str]]:
     white_text_img, black_text_img = process_image(image)
 
     # print(f"in_game white pixels: {sum_white_pixels(closing)}")
     if sum_white_pixels(white_text_img) > 1700:
         return {"text": "in_game", "params": {}}
 
-    energy = extract_energy(black_text_img)
-
-    if only_energy:
-        return energy
-
     for key in text_location.keys():
         text = extract_text(black_text_img, key)
-        params = {"energy": energy} if energy else {}
 
         if text != "":
-            return {"text": text, "params": params}
+            return {"text": text, "params": {}}
 
     # cv2.imwrite("cropped.png", inv)
 

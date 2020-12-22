@@ -292,7 +292,7 @@ class CaveEngine(QObject):
         else:
             self.goTroughDungeon_old()
         # Add movement if decentering is detected
-        if self.centerAfterCrossingDungeon or self.currentLevel == 18:
+        if self.centerAfterCrossingDungeon:
             self.centerPlayer()
 
     def centerPlayer(self):
@@ -562,23 +562,20 @@ class CaveEngine(QObject):
         self.screen_connector.stopRequested = False
 
         logger.info("New game. Starting from level %d" % self.currentLevel)
-        self.wait(2)
+        self.wait(5)
         if self.currentLevel == 0:
             if self.UseManualStart:
                 input("Press any key to start a game (your energy bar must be at least 5)")
             else:
-                while not self.SkipEnergyCheck and not self.enough_energy(5):
+                while not self.SkipEnergyCheck and not self.screen_connector.check_frame("least_5_energy"):
                     logger.info(f"No energy, waiting for {delay_energy_check}s")
                     self.noEnergyLeft.emit()
                     self.wait(delay_energy_check)
             self.chooseCave()
+
+        start_time = time.perf_counter()
         try:
-            start_time = time.perf_counter()
-
             self.play_cave()
-
-            end_time = time.perf_counter()
-            logger.info(f"This play took {end_time-start_time:0.4f} seconds")
         except Exception as exc:
             self.pressCloseEndIfEndedFrame()
             if exc.args[0] == "ended":
@@ -592,6 +589,10 @@ class CaveEngine(QObject):
             else:
                 logger.exception("Got an unknown exception: %s" % exc)
                 self._exitEngine()
+
+        end_time = time.perf_counter()
+        logger.info(f"This play took {(end_time-start_time)/60:0.1f} minutes")
+
         self.pressCloseEndIfEndedFrame()
         self.statisctics_manager.saveOneGame(self.start_date, self.stat_lvl_start, self.currentLevel)
 
