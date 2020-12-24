@@ -354,7 +354,7 @@ class GameScreenConnector:
         line_filtered = self.filter_raw_hp_line_window(line)
 
         center_diff = self.get_player_decentering_by_max_green_group(line_filtered)
-        if abs(center_diff) < (self.door_width * self.width) / 4.0:
+        if abs(center_diff) < (self.door_width * self.width) / 6.0:
             direction = "center"
         else:
             direction = "right" if center_diff < 0 else "left"
