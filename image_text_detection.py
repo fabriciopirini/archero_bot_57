@@ -1,4 +1,3 @@
-import logging
 import os
 from typing import Dict
 from typing import Optional
@@ -6,8 +5,8 @@ from typing import Optional
 import cv2
 import numpy as np
 import pytesseract
+from loguru import logger
 
-logger = logging.getLogger(__name__)
 
 # os.system("adb -s 127.0.0.1:5555 exec-out screencap -p >  screen.png")
 

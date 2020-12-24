@@ -1,18 +1,16 @@
-import logging
 import os
 import time
 from typing import Tuple
 
 import cv2
 import numpy as np
+from loguru import logger
 
 from custom_types import Frame
 from image_text_detection import extract_text_from_image
 from UsbConnector import UsbConnector
 from Utils import buildDataFolder
 from Utils import loadJsonData
-
-logger = logging.getLogger(__name__)
 
 
 class GameScreenConnector:

@@ -1,9 +1,9 @@
 import io
-import logging
 import os
 import time
 
 import numpy as np
+from loguru import logger
 from PIL import Image
 from ppadb.client import Client as AdbClient
 from ppadb.device import Device
@@ -14,8 +14,6 @@ from WorkerThread import WorkerThread
 This is the library
 https://pypi.org/project/pure-python-adb/
 """
-
-logger = logging.getLogger(__name__)
 
 
 class UsbConnector(object):

@@ -1,14 +1,12 @@
 import enum
-import logging
 import os
 
+from loguru import logger
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtCore import QObject
 
 from CaveDungeonEngine import CaveEngine
 from WorkerThread import WorkerThread
-
-logger = logging.getLogger(__name__)
 
 
 class EngineState(enum.Enum):

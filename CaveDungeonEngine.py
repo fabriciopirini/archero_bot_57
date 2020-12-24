@@ -1,10 +1,10 @@
 import enum
-import logging
 import os
 import time
 from datetime import datetime
 
 import cv2
+from loguru import logger
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtCore import QObject
 
@@ -16,8 +16,6 @@ from Utils import buildDataFolder
 from Utils import getCoordFilePath
 from Utils import loadJsonData
 from Utils import readAllSizesFolders
-
-logger = logging.getLogger(__name__)
 
 
 class HealingStrategy(enum.Enum):

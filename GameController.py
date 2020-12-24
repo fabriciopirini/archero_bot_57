@@ -6,12 +6,13 @@ from GameController.GameControllerView import GameControllerWindow
 
 if __name__ == "__main__":
     import sys
-    import logging
+    from loguru import logger
 
-    logging.basicConfig(
-        format="%(asctime)s [%(levelname)s][%(funcName)s] %(message)s",
-        level=logging.INFO,
-        datefmt="%H:%M:%S",
+    logger.remove()
+    logger.add(
+        sys.stdout,
+        format="<green>{time:HH:mm:ss}</green> [<level>{level}</level>] <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
+        level="INFO",
     )
 
     app = QtWidgets.QApplication(sys.argv)
