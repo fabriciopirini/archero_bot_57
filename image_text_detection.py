@@ -7,9 +7,6 @@ import numpy as np
 import pytesseract
 from loguru import logger
 
-
-# os.system("adb -s 127.0.0.1:5555 exec-out screencap -p >  screen.png")
-
 text_location = {
     "global-level-up": {"startX": 90, "startY": 450, "endX": 1000, "endY": 550},
     "level-up": {"startX": 150, "startY": 490, "endX": 925, "endY": 570},

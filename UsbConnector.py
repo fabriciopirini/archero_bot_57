@@ -68,31 +68,28 @@ class UsbConnector(object):
     #     #         return False
 
     def tryConnect(self) -> bool:
-        # Default is "127.0.0.1" and 5037, but nox is 62001
         if self.connected and self.getDeviceSerialNo() is not None:
             return True
         self._changeConnectedState(False)
         self.checkingConnectionChange(True)
-        ports = [5037, 5555]
-        ok = False
-        os.system("adb disconnect")
-        dev = "device"
-        for p in ports:
-            os.system("adb connect {}:{}".format(self._host, p))
-            dev = self.getDeviceSerialNo()
-            if dev is not None:
-                if "offline" not in dev:
-                    self._port = 5037
-                    ok = True
-                    break
-            os.system("adb disconnect")
-        if ok:
-            self._client = AdbClient(host=self._host, port=self._port)
-            self.my_device = self._client.device(dev)
+
+        adb = AdbClient(host="127.0.0.1", port=5037)
+        devices = adb.devices()
+
+        if len(devices) == 0:
+            logger.info("No device attached")
+            quit()
+
+        self._client = adb
+        try:
+            self.my_device = devices[0]
             self._changeConnectedState(True)
-        else:
-            self._changeConnectedState(False)
+            logger.info(f"Connected to device {self._host}:{self._port}")
+        except RuntimeError:
+            self._changeConnectedState(True)
+            logger.info("Couldn't connect to device")
         self.checkingConnectionChange(False)
+
         return self.connected
 
     def disconnect(self) -> bool:
@@ -124,7 +121,10 @@ class UsbConnector(object):
         Executes a screen and saved it in current folder as 'screen.png'
         :return:
         """
-        os.system("adb -s 127.0.0.1:5555 exec-out screencap -p > " + name)
+        result = self.my_device.screencap()
+        with open(name, "wb") as fp:
+            fp.write(result)
+
         return True
 
     def adb_screen_getpixels(self) -> np.ndarray:

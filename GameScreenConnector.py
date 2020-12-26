@@ -208,7 +208,10 @@ class GameScreenConnector:
     def define_state_by_ocr(self) -> str:
         min_energy = 5
 
-        os.system("adb -s 127.0.0.1:5555 exec-out screencap -p > screen.png")
+        result = self.device_connector.my_device.screencap()
+        with open("screen.png", "wb") as fp:
+            fp.write(result)
+
         image = cv2.imread("screen.png")
         extracted_from_image = extract_text_from_image(image)
 
