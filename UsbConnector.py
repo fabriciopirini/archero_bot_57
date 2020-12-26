@@ -124,7 +124,7 @@ class UsbConnector(object):
         Executes a screen and saved it in current folder as 'screen.png'
         :return:
         """
-        os.system("adb exec-out screencap -p > " + name)
+        os.system("adb -s 127.0.0.1:5555 exec-out screencap -p > " + name)
         return True
 
     def adb_screen_getpixels(self) -> np.ndarray:

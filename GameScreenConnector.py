@@ -208,7 +208,7 @@ class GameScreenConnector:
     def define_state_by_ocr(self) -> str:
         min_energy = 5
 
-        os.system("adb exec-out screencap -p >  screen.png")
+        os.system("adb -s 127.0.0.1:5555 exec-out screencap -p > screen.png")
         image = cv2.imread("screen.png")
         extracted_from_image = extract_text_from_image(image)
 
@@ -356,9 +356,10 @@ class GameScreenConnector:
         center_diff = self.get_player_decentering_by_max_green_group(line_filtered)
         if abs(center_diff) < (self.door_width * self.width) / 6.0:
             direction = "center"
+            logger.info("Character on the center")
         else:
             direction = "right" if center_diff < 0 else "left"
-        logger.debug("Character on the %s side by %dpx" % (direction, abs(center_diff)))
+            logger.info("Character on the %s by %dpx" % (direction, abs(center_diff)))
         return center_diff, direction
 
     def remove_outlayers_in_line(self, masked_green, high_pixel_color):

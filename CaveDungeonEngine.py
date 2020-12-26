@@ -544,7 +544,7 @@ class CaveEngine(QObject):
             self.currentLevel = 0
 
     def enough_energy(self, min_energy=5):
-        os.system("adb exec-out screencap -p >  screen.png")
+        os.system("adb -s 127.0.0.1:5555 exec-out screencap -p >  screen.png")
         image = cv2.imread("screen.png")
 
         energy = extract_energy(image)
@@ -565,8 +565,12 @@ class CaveEngine(QObject):
             if self.UseManualStart:
                 input("Press any key to start a game (your energy bar must be at least 5)")
             else:
+                logged_first = False
                 while not self.SkipEnergyCheck and not self.screen_connector.check_frame("least_5_energy"):
-                    logger.info(f"No energy, waiting for {delay_energy_check}s")
+                    if not logged_first:
+                        logger.info(f"Waiting for enough energy...")
+                        logged_first = True
+
                     self.noEnergyLeft.emit()
                     self.wait(delay_energy_check)
             self.chooseCave()
