@@ -77,17 +77,18 @@ class UsbConnector(object):
         devices = adb.devices()
 
         if len(devices) == 0:
-            logger.info("No device attached")
-            quit()
+            logger.debug("No device attached. Retrying...")
 
-        self._client = adb
-        try:
-            self.my_device = devices[0]
-            self._changeConnectedState(True)
-            logger.info(f"Connected to device {self._host}:{self._port}")
-        except RuntimeError:
-            self._changeConnectedState(True)
-            logger.info("Couldn't connect to device")
+        else:
+            self._client = adb
+            try:
+                self.my_device = devices[0]
+                self._changeConnectedState(True)
+                logger.info(f"Connected to device {self._host}:{self._port}")
+            except RuntimeError:
+                self._changeConnectedState(True)
+                logger.info("Unable to connect to device")
+
         self.checkingConnectionChange(False)
 
         return self.connected
