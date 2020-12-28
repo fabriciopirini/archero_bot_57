@@ -1,6 +1,9 @@
 import io
 import os
 import time
+from subprocess import check_call
+from subprocess import DEVNULL
+from subprocess import STDOUT
 
 import numpy as np
 from loguru import logger
@@ -77,7 +80,9 @@ class UsbConnector(object):
         devices = adb.devices()
 
         if len(devices) == 0:
-            logger.debug("No device attached. Retrying...")
+            logger.debug("No device attached. Restarting adb-server and retrying...")
+            check_call(["adb", "kill-server"], stdout=DEVNULL, stderr=STDOUT)
+            check_call(["adb", "start-server"], stdout=DEVNULL, stderr=STDOUT)
 
         else:
             self._client = adb

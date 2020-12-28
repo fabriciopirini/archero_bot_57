@@ -359,10 +359,10 @@ class GameScreenConnector:
         center_diff = self.get_player_decentering_by_max_green_group(line_filtered)
         if abs(center_diff) < (self.door_width * self.width) / 6.0:
             direction = "center"
-            logger.info("Character on the center")
+            logger.debug("Character already centered")
         else:
             direction = "right" if center_diff < 0 else "left"
-            logger.info("Character on the %s by %dpx" % (direction, abs(center_diff)))
+            logger.debug("Character on the %s by %dpx" % (direction, abs(center_diff)))
         return center_diff, direction
 
     def remove_outlayers_in_line(self, masked_green, high_pixel_color):

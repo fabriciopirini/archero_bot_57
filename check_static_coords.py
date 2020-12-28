@@ -53,7 +53,11 @@ for file in files:
         computed = [k for k, v in complete_frame.items() if v]
         sum = len(computed)
         ok = False
-        exergy_print = "" if not screen_conector.check_frame("least_5_energy", frame) else " + least_5_energy"
+        exergy_print = (
+            ""
+            if not screen_conector.check_frame("least_5_energy_no_battlepass", frame)
+            else " + least_5_energy_no_battlepass"
+        )
         if sum == 0:
             print("NO_DETECTION - %s %s" % (file, exergy_print))
         elif sum == 1:

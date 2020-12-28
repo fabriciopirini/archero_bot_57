@@ -11,7 +11,7 @@ if __name__ == "__main__":
     logger.remove()
     logger.add(
         sys.stdout,
-        format="<green>{time:HH:mm:ss}</green> [<level>{level}</level>] <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
+        format="<green>{time:HH:mm:ss}</green> [<level>{level}</level>] <cyan>{function}</cyan> - <cyan>{name}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
         level="INFO",
     )
 

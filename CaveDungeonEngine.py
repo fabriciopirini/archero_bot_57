@@ -344,11 +344,11 @@ class CaveEngine(QObject):
                     "mistery_vendor",
                     "ad_ask",
                 ]:
-                    logger.info("Level ended. Collecting results for leveling up.")
+                    logger.debug("Level ended. Collecting results for leveling up.")
                     self.wait(1)
                     return
                 elif check_exp_bar and self.screen_connector.check_exp_bar_has_changed(experience_bar_line, frame):
-                    logger.info("Experience gained!")
+                    logger.debug("Experience gained!")
                     self.wait(3)
                     return
                 elif state == "in_game":
@@ -369,7 +369,7 @@ class CaveEngine(QObject):
         i = 0
         wait_time = 1
         wait_time_wheel = 5
-        have_battle_pass = True
+        have_battle_pass = False
 
         while state != "in_game":
             if self.stopRequested:
@@ -379,7 +379,7 @@ class CaveEngine(QObject):
                 self._exitEngine()
             logger.debug("Checking screen...")
             state = self.screen_connector.get_frame_state()
-            logger.info("state: %s" % state)
+            logger.debug("state: %s" % state)
             if state == "select_ability":
                 self.tap("ability_left")
             elif state == "fortune_wheel":
@@ -522,9 +522,12 @@ class CaveEngine(QObject):
 
     def boss_final(self):
         self.wait(2)
-        self.swipe("w", 3)
-        self.wait(50)
+        self.swipe("w", 2)
+        start_time = time.perf_counter()
+        self.wait(20)
         self.reactGamePopups()
+        end_time = time.perf_counter()
+        logger.debug(f"The final boss took {(end_time-start_time):0.1f} seconds")
         self.tap("start")
         self.wait(2)
         self.swipe("n", 5)
@@ -562,14 +565,16 @@ class CaveEngine(QObject):
         self.stopRequested = False
         self.screen_connector.stopRequested = False
 
-        logger.info("New game. Starting from level %d" % self.currentLevel)
-        self.wait(5)
+        logger.info("Received request to start new game from level %d" % self.currentLevel)
+        # self.wait(5)
         if self.currentLevel == 0:
             if self.UseManualStart:
                 input("Press any key to start a game (your energy bar must be at least 5)")
             else:
                 logged_first = False
-                while not self.SkipEnergyCheck and not self.screen_connector.check_frame("least_5_energy"):
+                while not self.SkipEnergyCheck and not self.screen_connector.check_frame(
+                    "least_5_energy_no_battlepass"
+                ):
                     if not logged_first:
                         logger.info(f"Waiting for enough energy...")
                         logged_first = True
